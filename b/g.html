@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ui.live - Fabian's Profile</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        gray: {
+                            50: '#f8f9fa',
+                            100: '#f1f3f5',
+                            200: '#e9ecef',
+                            800: '#1e1e1e',
+                            900: '#121212',
+                            950: '#0a0a0a',
+                        },
+                        brand: {
+                            dark: '#1c1c22',
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(0,0,0,0.08)',
+                        'soft-dark': '0 10px 40px -10px rgba(0,0,0,0.5)',
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+        
+        /* Smooth transitions */
+        body, div, span, button, a {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Hide scrollbar for horizontal scrolling elements */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Glassmorphism utilities */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .dark .glass-nav {
+            background: rgba(18, 18, 18, 0.7);
+        }
+
+        /* Masonry Grid CSS for Cards */
+        .masonry-grid {
+            column-count: 2;
+            column-gap: 1rem;
+        }
+        @media (min-width: 768px) {
+            .masonry-grid { column-count: 3; }
+        }
+        @media (min-width: 1280px) {
+            .masonry-grid { column-count: 4; }
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1rem;
+        }
+
+        /* Floating Animation for 3D elements */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 h-screen w-screen overflow-hidden flex antialiased">
+
+    <!-- ========================================== -->
+    <!-- DESKTOP SIDEBAR (Hidden on Mobile)         -->
+    <!-- ========================================== -->
+    <aside class="hidden lg:flex flex-col w-[320px] h-full border-r border-gray-200/60 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-y-auto shrink-0 relative z-20">
+        <div class="p-10 pb-6">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2 mb-12">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-orange-400 flex items-center justify-center text-white font-bold text-xs shadow-sm">ui</div>
+                <span class="font-bold text-xl tracking-tight dark:text-white">ui.live</span>
+            </div>
+
+            <!-- Profile Info -->
+            <div class="flex flex-col items-center text-center">
+                <div class="relative mb-5">
+                    <div class="w-24 h-24 rounded-full bg-orange-100 dark:bg-gray-800 overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-center relative">
+                        <!-- Simulated 3D Avatar -->
+                        <div class="w-16 h-16 bg-[#ffc3a0] rounded-full absolute bottom-2"></div>
+                        <div class="w-10 h-8 bg-black rounded-t-3xl absolute top-4"></div>
+                        <div class="flex space-x-2 absolute top-10">
+                            <div class="w-2 h-2 bg-black rounded-full"></div>
+                            <div class="w-2 h-2 bg-black rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h1 class="text-3xl font-bold mb-2">Fabian</h1>
+                <p class="text-[13px] text-gray-500 dark:text-gray-400 leading-relaxed max-w-[200px] mb-8">UI/UX Designer. Curated premium assets for startups and creators.</p>
+            </div>
+
+            <!-- Tags -->
+            <h3 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4 text-left">Tags</h3>
+            <div class="flex flex-wrap gap-2 mb-10">
+                <span class="px-3 py-1.5 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition">Dashboard</span>
+                <span class="px-3 py-1.5 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition">Mobile App</span>
+                <span class="px-3 py-1.5 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition">Web</span>
+                <span class="px-3 py-1.5 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition">Dark</span>
+                <span class="px-3 py-1.5 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition">Light</span>
+                <span class="px-3 py-1.5 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition">Design system</span>
+                <span class="px-3 py-1.5 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-medium cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition">UI Kit</span>
+            </div>
+
+            <!-- Stats Desktop -->
+            <div class="flex items-center space-x-6 mb-8 text-[13px] text-gray-600 dark:text-gray-400">
+                <div class="flex items-center space-x-2">
+                    <i class="ph ph-folder-notch text-lg"></i>
+                    <span><strong>48</strong> freebies</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i class="ph ph-copy text-lg"></i>
+                    <span><strong>5.3k</strong> copies</span>
+                </div>
+            </div>
+
+            <!-- Socials Desktop -->
+            <div class="flex flex-col space-y-4 text-sm text-gray-500 mb-8">
+                <a href="#" class="flex items-center space-x-2 hover:text-gray-900 dark:hover:text-white transition">
+                    <i class="ph ph-link-simple text-lg"></i> <span>ui8.net</span>
+                </a>
+                <div class="flex space-x-4 pt-2">
+                    <a href="#" class="hover:text-gray-900 dark:hover:text-white transition"><i class="ph-bold ph-x-logo text-lg"></i></a>
+                    <a href="#" class="hover:text-gray-900 dark:hover:text-white transition"><i class="ph-bold ph-instagram-logo text-lg"></i></a>
+                    <a href="#" class="hover:text-gray-900 dark:hover:text-white transition"><i class="ph-bold ph-dribbble-logo text-lg"></i></a>
+                    <a href="#" class="hover:text-gray-900 dark:hover:text-white transition"><i class="ph-bold ph-behance-logo text-lg"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Theme Toggle Desktop Sidebar -->
+        <div class="mt-auto p-8 relative flex items-center">
+            <button onclick="cycleTheme()" class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                <i id="desktop-theme-icon" class="ph-fill ph-moon text-xl"></i>
+            </button>
+            <button onclick="cycleTheme()" class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                <i class="ph-bold ph-sun text-xl"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ========================================== -->
+    <!-- MAIN CONTENT AREA                          -->
+    <!-- ========================================== -->
+    <main class="flex-1 flex flex-col h-full overflow-y-auto bg-[#fafafa] dark:bg-[#111111] relative scroll-smooth">
+        
+        <!-- ========================================== -->
+        <!-- MOBILE HEADER (Sticky)                     -->
+        <!-- ========================================== -->
+        <header class="lg:hidden sticky top-0 z-40 bg-[#fafafa]/90 dark:bg-[#111111]/90 backdrop-blur-xl px-5 py-4 flex items-center justify-between border-b border-gray-200/50 dark:border-gray-800/50">
+            <div class="flex items-center space-x-3">
+                <button class="text-gray-900 dark:text-white">
+                    <i class="ph-bold ph-list text-2xl"></i>
+                </button>
+                <div class="font-bold text-lg tracking-tight dark:text-white flex items-center space-x-1">
+                    <span class="w-2 h-2 rounded-full bg-black dark:bg-white inline-block mr-1"></span>
+                    ui.live
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-600 dark:text-gray-300 relative">
+                    <i class="ph-bold ph-bell text-xl"></i>
+                    <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-[#fafafa] dark:border-[#111111]"></span>
+                </button>
+                <div class="w-8 h-8 rounded-full bg-orange-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden flex items-center justify-center relative">
+                     <div class="w-6 h-6 bg-[#ffc3a0] rounded-full absolute bottom-0"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ========================================== -->
+        <!-- DESKTOP TOP NAV (Hidden on mobile)         -->
+        <!-- ========================================== -->
+        <div class="hidden lg:flex items-center justify-between px-10 py-8 sticky top-0 z-30 bg-[#fafafa]/80 dark:bg-[#111111]/80 backdrop-blur-md">
+            
+            <div class="flex-1 flex justify-center">
+                <div class="flex items-center space-x-1 bg-white dark:bg-gray-900 p-1.5 rounded-full border border-gray-200/50 dark:border-gray-800 shadow-sm">
+                    <button class="px-5 py-2 text-[13px] font-semibold bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-full">All posts</button>
+                    <button class="px-5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 dark:hover:text-white rounded-full transition">Templates</button>
+                    <button class="px-5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 dark:hover:text-white rounded-full transition">Components</button>
+                    <button class="px-5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 dark:hover:text-white rounded-full transition">Mockups</button>
+                    <button class="px-5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 dark:hover:text-white rounded-full transition">3D Assets</button>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center bg-white dark:bg-gray-900 rounded-full p-1.5 border border-gray-200/50 dark:border-gray-800 shadow-sm cursor-pointer">
+                    <div class="w-7 h-7 bg-red-500 rounded-full flex items-center justify-center text-white text-sm"><i class="ph-fill ph-heart"></i></div>
+                    <span class="text-xs font-bold px-3">21</span>
+                    <div class="w-6 h-6 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center text-gray-400">
+                        <i class="ph-bold ph-caret-down text-[10px]"></i>
+                    </div>
+                </div>
+                <button class="w-10 h-10 bg-white dark:bg-gray-900 rounded-full border border-gray-200/50 dark:border-gray-800 shadow-sm flex items-center justify-center text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <i class="ph-bold ph-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="p-5 lg:px-10 lg:py-4 pb-32">
+            
+            <!-- ========================================== -->
+            <!-- MOBILE PROFILE HERO (Hidden on Desktop)    -->
+            <!-- ========================================== -->
+            <div class="lg:hidden mb-8">
+                <!-- Breadcrumb / Theme -->
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold dark:text-white flex items-center">
+                        ui.live <span class="mx-2 text-gray-300 dark:text-gray-700">|</span> <span class="text-gray-500 dark:text-gray-400 font-medium">Fabian's Profile</span>
+                    </h2>
+                    <button onclick="cycleTheme()" class="w-8 h-8 rounded-full bg-gray-200/50 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300">
+                        <i id="mobile-theme-icon" class="ph-fill ph-moon text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Stats & Avatar Grid -->
+                <div class="flex justify-between items-center mb-6 px-2">
+                    <!-- Left Stats -->
+                    <div class="text-[11px] text-gray-500 dark:text-gray-400 font-medium leading-relaxed space-y-1">
+                        <p>Assets: <span class="text-gray-900 dark:text-white font-bold">55</span></p>
+                        <p>Followers: <span class="text-gray-900 dark:text-white font-bold">12.3K</span></p>
+                        <p>Downloads: <span class="text-gray-900 dark:text-white font-bold">4.1K</span></p>
+                    </div>
+
+                    <!-- Center Avatar -->
+                    <div class="relative">
+                         <div class="w-[100px] h-[100px] rounded-full bg-[#fce4d6] dark:bg-gray-800 overflow-hidden border-[3px] border-white dark:border-gray-900 shadow-md flex items-center justify-center relative z-10">
+                            <!-- 3D Avatar representation -->
+                             <div class="w-16 h-16 bg-[#ffc3a0] rounded-full absolute bottom-3"></div>
+                             <div class="w-10 h-8 bg-black rounded-t-3xl absolute top-6"></div>
+                             <div class="flex space-x-2 absolute top-12">
+                                <div class="w-2 h-2 bg-black rounded-full"></div>
+                                <div class="w-2 h-2 bg-black rounded-full"></div>
+                             </div>
+                        </div>
+                        <!-- Sparkle decoration -->
+                        <div class="absolute -top-1 -right-2 text-yellow-400 z-20">
+                            <i class="ph-fill ph-sparkle text-xl"></i>
+                        </div>
+                    </div>
+
+                    <!-- Right Stats -->
+                    <div class="text-[11px] text-gray-500 dark:text-gray-400 font-medium leading-relaxed space-y-1 text-right">
+                         <p>Design Score: <span class="text-gray-900 dark:text-white font-bold">98</span></p>
+                         <p class="flex items-center justify-end">Reviews: <span class="text-gray-900 dark:text-white font-bold ml-1 mr-1">4.9</span> <i class="ph-fill ph-star text-yellow-400 text-xs"></i></p>
+                    </div>
+                </div>
+
+                <!-- Name & Bio -->
+                <div class="text-center mb-6">
+                    <h1 class="text-3xl font-bold mb-1 dark:text-white">Fabian</h1>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 max-w-[250px] mx-auto">UI/UX Designer. Curated premium assets for startups and creators.</p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-center space-x-3 mb-8">
+                    <button class="px-6 py-2.5 rounded-full border-2 border-gray-200 dark:border-gray-700 text-sm font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 transition">Contact</button>
+                    <button class="px-8 py-2.5 rounded-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-bold shadow-lg shadow-gray-900/20 dark:shadow-white/20 hover:scale-105 transition transform">Hire Me</button>
+                </div>
+
+                <!-- Mobile Tags (Scrollable) -->
+                <div class="mb-4">
+                    <h3 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3 ml-2">Tags</h3>
+                    <div class="flex overflow-x-auto space-x-2 pb-4 no-scrollbar px-2">
+                        <span class="shrink-0 px-4 py-2 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl text-[13px] font-medium shadow-sm">Dashboard</span>
+                        <span class="shrink-0 px-4 py-2 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl text-[13px] font-medium shadow-sm">Mobile App</span>
+                        <span class="shrink-0 px-4 py-2 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl text-[13px] font-medium shadow-sm">Web</span>
+                        <span class="shrink-0 px-4 py-2 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl text-[13px] font-medium shadow-sm">Dark</span>
+                        <span class="shrink-0 px-4 py-2 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl text-[13px] font-medium shadow-sm">Light</span>
+                    </div>
+                </div>
+
+                <!-- Mobile Filters -->
+                <div class="flex space-x-2 bg-gray-200/50 dark:bg-gray-800/50 p-1.5 rounded-full self-start inline-flex mb-6">
+                    <button class="px-5 py-2 text-xs font-semibold bg-white dark:bg-gray-700 rounded-full shadow-sm">Active</button>
+                    <button class="px-5 py-2 text-xs font-medium text-gray-500 hover:text-gray-900 dark:hover:text-white transition">Pending</button>
+                </div>
+            </div>
+
+            <!-- Desktop Filters (Hidden on Mobile) -->
+            <div class="hidden lg:flex space-x-2 bg-white dark:bg-gray-900 p-1.5 rounded-full self-start inline-flex mb-8 border border-gray-200/60 dark:border-gray-800 shadow-sm">
+                <button class="px-5 py-2 text-xs font-semibold bg-gray-100 dark:bg-gray-800 rounded-full">Active</button>
+                <button class="px-5 py-2 text-xs font-medium text-gray-500 hover:text-gray-900 dark:hover:text-white transition">Pending</button>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- THE MASONRY GRID (Shared Desktop & Mobile) -->
+            <!-- ========================================== -->
+            <div class="masonry-grid">
+                
+                <!-- Item 1: Dark Stats Dashboard -->
+                <div class="masonry-item bg-white dark:bg-gray-900 rounded-[1.5rem] p-3 shadow-soft dark:shadow-soft-dark border border-gray-100 dark:border-gray-800">
+                    <div class="bg-[#1e1e24] rounded-[1rem] aspect-[4/3] w-full p-4 relative overflow-hidden flex flex-col justify-between">
+                        <div class="flex justify-between items-start text-white">
+                            <span class="font-bold text-xl">687</span>
+                            <div class="flex space-x-1 mt-1">
+                                <div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                <div class="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+                            </div>
+                        </div>
+                        <!-- Abstract bars -->
+                        <div class="flex items-end justify-between space-x-1.5 h-16 mt-4">
+                            <div class="w-full bg-blue-500 rounded-sm h-[30%] opacity-80"></div>
+                            <div class="w-full bg-blue-500 rounded-sm h-[70%]"></div>
+                            <div class="w-full bg-blue-500 rounded-sm h-[50%] opacity-60"></div>
+                            <div class="w-full bg-blue-500 rounded-sm h-full"></div>
+                            <div class="w-full bg-blue-500 rounded-sm h-[80%] opacity-90"></div>
+                            <div class="w-full bg-blue-500 rounded-sm h-[40%] opacity-40"></div>
+                        </div>
+                        <div class="flex justify-between text-gray-500 text-[10px] mt-4 font-medium uppercase">
+                            <span>1.5m</span>
+                            <span>1m</span>
+                            <span>529k</span>
+                            <span>4785</span>
+                        </div>
+                    </div>
+                    <div class="px-2 pt-3 pb-1">
+                        <h3 class="text-sm font-bold truncate">Finance Dashboard UI</h3>
+                    </div>
+                </div>
+
+                <!-- Item 2: Blubby Monster (3D) -->
+                <div class="masonry-item bg-white dark:bg-gray-900 rounded-[1.5rem] p-3 shadow-soft dark:shadow-soft-dark border border-gray-100 dark:border-gray-800">
+                    <div class="bg-gradient-to-b from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 rounded-[1rem] aspect-square w-full relative overflow-hidden flex items-center justify-center group cursor-pointer">
+                         <!-- CSS Representation of Monster -->
+                         <div class="w-32 h-32 bg-[#4ac8f5] rounded-3xl relative animate-float shadow-xl flex flex-col items-center justify-center transform group-hover:scale-110 transition duration-500">
+                             <!-- Horns -->
+                             <div class="w-4 h-6 bg-[#4ac8f5] absolute -top-4 left-6 rounded-t-full -rotate-12"></div>
+                             <div class="w-4 h-6 bg-[#4ac8f5] absolute -top-4 right-6 rounded-t-full rotate-12"></div>
+                             
+                             <!-- Eyes (Glasses) -->
+                             <div class="flex space-x-2 mb-2 bg-black px-3 py-1 rounded-full items-center">
+                                 <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center">
+                                    <div class="w-2 h-2 bg-black rounded-full"></div>
+                                 </div>
+                                 <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center">
+                                     <div class="w-2 h-2 bg-black rounded-full"></div>
+                                 </div>
+                             </div>
+                             <!-- Mouth -->
+                             <div class="w-10 h-3 bg-[#1e88e5] rounded-full mt-2 flex justify-around items-start overflow-hidden">
+                                 <div class="w-2 h-2 bg-white rounded-b-full"></div>
+                                 <div class="w-2 h-2 bg-white rounded-b-full"></div>
+                             </div>
+                         </div>
+                    </div>
+                    <div class="px-2 pt-3 pb-1 flex justify-between items-center">
+                        <div>
+                            <h3 class="text-sm font-bold">Blubby Monster</h3>
+                            <p class="text-[10px] text-gray-500">Asset</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3: Component Library / Analytics (White Card) -->
+                <div class="masonry-item bg-white dark:bg-gray-900 rounded-[1.5rem] p-3 shadow-soft dark:shadow-soft-dark border border-gray-100 dark:border-gray-800">
+                    <div class="bg-gray-50 dark:bg-gray-950 rounded-[1rem] p-4 relative border border-gray-100 dark:border-gray-800 overflow-hidden">
+                        <!-- Tiny mock UI -->
+                        <div class="space-y-3">
+                            <div class="h-6 w-1/3 bg-gray-200 dark:bg-gray-800 rounded-md"></div>
+                            
+                            <!-- Graph line -->
+                            <div class="h-16 w-full flex items-end space-x-1">
+                                <div class="w-full bg-blue-100 dark:bg-blue-900/30 rounded-t h-[40%] relative"><div class="absolute top-0 w-full h-0.5 bg-blue-500"></div></div>
+                                <div class="w-full bg-blue-100 dark:bg-blue-900/30 rounded-t h-[60%] relative"><div class="absolute top-0 w-full h-0.5 bg-blue-500"></div></div>
+                                <div class="w-full bg-blue-100 dark:bg-blue-900/30 rounded-t h-[30%] relative"><div class="absolute top-0 w-full h-0.5 bg-blue-500"></div></div>
+                                <div class="w-full bg-blue-100 dark:bg-blue-900/30 rounded-t h-[80%] relative"><div class="absolute top-0 w-full h-0.5 bg-blue-500"></div></div>
+                                <div class="w-full bg-blue-100 dark:bg-blue-900/30 rounded-t h-[50%] relative"><div class="absolute top-0 w-full h-0.5 bg-blue-500"></div></div>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <div class="h-8 w-1/2 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm flex items-center justify-center"><div class="w-4 h-4 rounded-full bg-green-400"></div></div>
+                                <div class="h-8 w-1/2 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm flex items-center justify-center"><div class="w-4 h-4 rounded-full bg-red-400"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-2 pt-3 pb-1">
+                        <h3 class="text-sm font-bold leading-tight">SaaS Analytics<br>Dashboard</h3>
+                    </div>
+                </div>
+
+                <!-- Item 4: Mobile App Mockup (Dark/Purple) -->
+                <div class="masonry-item bg-white dark:bg-gray-900 rounded-[1.5rem] p-3 shadow-soft dark:shadow-soft-dark border border-gray-100 dark:border-gray-800">
+                    <div class="bg-[#151515] rounded-[1rem] aspect-[3/4] w-full p-4 relative overflow-hidden border-2 border-gray-800 flex flex-col">
+                        <div class="flex justify-between items-center text-white mb-6 text-xs">
+                            <i class="ph-bold ph-arrow-left"></i>
+                            <span class="font-semibold tracking-wide">Lumburr</span>
+                            <i class="ph-bold ph-dots-three"></i>
+                        </div>
+                        <div class="w-20 h-20 bg-gradient-to-tr from-purple-600 to-indigo-400 rounded-2xl mx-auto mb-6 transform rotate-6 shadow-lg shadow-purple-500/20 flex items-center justify-center">
+                            <!-- Little monster shape inside -->
+                            <div class="w-10 h-10 bg-white/20 rounded-xl backdrop-blur-sm"></div>
+                        </div>
+                        
+                        <!-- List items -->
+                        <div class="space-y-3">
+                            <div class="h-10 bg-gray-800/80 rounded-xl flex items-center justify-between px-3">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-6 h-6 rounded bg-purple-500/50"></div>
+                                    <div class="w-12 h-1.5 bg-gray-700 rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="h-10 bg-gray-800/80 rounded-xl flex items-center justify-between px-3">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-6 h-6 rounded bg-blue-500/50"></div>
+                                    <div class="w-10 h-1.5 bg-gray-700 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 5: Crypto Trade List -->
+                <div class="masonry-item bg-white dark:bg-gray-900 rounded-[1.5rem] p-3 shadow-soft dark:shadow-soft-dark border border-gray-100 dark:border-gray-800">
+                    <div class="bg-gray-50 dark:bg-gray-950/50 rounded-[1rem] p-4 relative">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-sm">Trade</h3>
+                            <i class="ph-bold ph-sliders-horizontal text-gray-400 text-sm"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <!-- ETH -->
+                            <div class="flex justify-between items-center bg-white dark:bg-gray-900 p-2.5 rounded-xl shadow-sm border border-gray-100/50 dark:border-gray-800/50">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600"><i class="ph-fill ph-currency-eth text-xs"></i></div>
+                                    <div>
+                                        <div class="font-bold text-xs">Ethereum</div>
+                                        <div class="text-[9px] text-gray-400">ETH</div>
+                                    </div>
+                                </div>
+                                <button class="text-[10px] font-bold px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 transition">Buy</button>
+                            </div>
+                            <!-- BTC -->
+                            <div class="flex justify-between items-center bg-white dark:bg-gray-900 p-2.5 rounded-xl shadow-sm border border-gray-100/50 dark:border-gray-800/50">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-7 h-7 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-500"><i class="ph-fill ph-currency-btc text-xs"></i></div>
+                                    <div>
+                                        <div class="font-bold text-xs">Bitcoin</div>
+                                        <div class="text-[9px] text-gray-400">BTC</div>
+                                    </div>
+                                </div>
+                                <button class="text-[10px] font-bold px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 transition">Buy</button>
+                            </div>
+                            <!-- MATIC -->
+                            <div class="flex justify-between items-center bg-white dark:bg-gray-900 p-2.5 rounded-xl shadow-sm border border-gray-100/50 dark:border-gray-800/50">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-7 h-7 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-500"><i class="ph-fill ph-polygon text-xs"></i></div>
+                                    <div>
+                                        <div class="font-bold text-xs">Polygon</div>
+                                        <div class="text-[9px] text-gray-400">MATIC</div>
+                                    </div>
+                                </div>
+                                <button class="text-[10px] font-bold px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 transition">Buy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 6: Dark Finance "Best to buy" -->
+                <div class="masonry-item bg-white dark:bg-gray-900 rounded-[1.5rem] p-3 shadow-soft dark:shadow-soft-dark border border-gray-100 dark:border-gray-800">
+                    <div class="bg-[#111114] rounded-[1rem] p-5 relative text-white">
+                        <div class="flex items-center space-x-2 mb-2">
+                            <h4 class="text-gray-400 text-xs font-semibold">Best to buy</h4>
+                        </div>
+                        <div class="text-2xl font-bold mb-4">$3,326<span class="text-gray-500">.18</span></div>
+                        
+                        <div class="flex items-center text-xs text-gray-400 mb-2">
+                            <div class="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center mr-2 text-white"><i class="ph-fill ph-arrow-up-right text-[8px]"></i></div>
+                            Ethereum (ETH)
+                        </div>
+
+                        <!-- SVG Graph -->
+                        <svg class="w-full h-12 mb-4" viewBox="0 0 100 30" preserveAspectRatio="none">
+                            <path d="M0,25 Q10,20 20,25 T40,15 T60,20 T80,5 T100,10" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                            <circle cx="80" cy="5" r="2.5" fill="#22c55e" />
+                        </svg>
+
+                        <button class="w-full py-2.5 bg-white text-black font-bold rounded-xl text-xs hover:bg-gray-200 transition mt-2">Smart trade</button>
+                    </div>
+                    <div class="px-2 pt-3 pb-1">
+                        <h3 class="text-sm font-bold truncate">Crypto Price Tracker</h3>
+                    </div>
+                </div>
+
+                <!-- Item 7: Component Library (Bottom card in Mobile Image) -->
+                <div class="masonry-item bg-white dark:bg-gray-900 rounded-[1.5rem] p-3 shadow-soft dark:shadow-soft-dark border border-gray-100 dark:border-gray-800 md:col-span-2 xl:col-span-1">
+                    <div class="px-2 pt-1 pb-3">
+                        <h3 class="text-sm font-bold">Component Library</h3>
+                    </div>
+                    <div class="bg-gray-50 dark:bg-gray-950/50 rounded-[1rem] p-4 flex flex-col space-y-4">
+                        <div class="flex justify-between items-center bg-white dark:bg-gray-900 p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+                            <span class="text-xs font-semibold">Text Input</span>
+                            <div class="w-4 h-4 border border-gray-300 dark:border-gray-600 rounded"></div>
+                        </div>
+                        <div class="flex items-center space-x-4 px-2">
+                            <div class="flex-1">
+                                <div class="text-[10px] text-gray-400 mb-1">Usage</div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-1.5"><div class="bg-black dark:bg-white h-1.5 rounded-full w-[55%]"></div></div>
+                                <div class="text-xs font-bold mt-1 text-right">55</div>
+                            </div>
+                            <div class="flex-1">
+                                <div class="text-[10px] text-gray-400 mb-1">Performance</div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-1.5"><div class="bg-green-500 h-1.5 rounded-full w-[98%]"></div></div>
+                                <div class="text-xs font-bold mt-1 text-right">98</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 8: 3D Astronaut -->
+                <div class="masonry-item bg-white dark:bg-gray-900 rounded-[1.5rem] p-3 shadow-soft dark:shadow-soft-dark border border-gray-100 dark:border-gray-800">
+                    <div class="bg-gradient-to-tr from-gray-200 to-gray-50 dark:from-gray-800 dark:to-gray-700 rounded-[1rem] aspect-square w-full relative overflow-hidden flex items-center justify-center animate-float">
+                        <!-- Abstract Astronaut -->
+                        <div class="relative w-20 h-20">
+                            <!-- Helmet -->
+                            <div class="w-14 h-14 bg-white dark:bg-gray-900 rounded-[1rem] absolute top-0 left-3 shadow-inner border-[3px] border-gray-200 dark:border-gray-700 z-10 flex items-center justify-center">
+                                <div class="w-8 h-6 bg-black rounded-lg"></div>
+                            </div>
+                            <!-- Body -->
+                            <div class="w-16 h-10 bg-blue-500 rounded-3xl absolute bottom-0 left-2"></div>
+                            <!-- Flag -->
+                            <div class="w-1 h-20 bg-gray-400 absolute bottom-0 -left-4"></div>
+                            <div class="w-8 h-5 bg-blue-600 absolute bottom-14 -left-12 rounded-sm"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MOBILE BOTTOM NAVIGATION (Floating pill)   -->
+    <!-- ========================================== -->
+    <div class="lg:hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 w-[90%] max-w-[360px] z-50">
+        <!-- Floating "View All Assets" Button overlapping the nav -->
+        <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 z-20 w-full flex justify-center">
+            <button class="bg-[#111111] dark:bg-white text-white dark:text-[#111111] px-5 py-2 rounded-full text-xs font-bold tracking-wide shadow-lg flex items-center space-x-1 hover:scale-105 transition">
+                <span>View All Assets</span>
+            </button>
+        </div>
+        
+        <!-- Navigation Bar -->
+        <nav class="glass-nav rounded-full shadow-soft-dark dark:shadow-none border border-white/20 dark:border-gray-800 flex justify-between items-center px-6 py-3 relative z-10 pt-5">
+            <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition flex flex-col items-center">
+                <i class="ph-bold ph-squares-four text-2xl"></i>
+            </a>
+            
+            <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition">
+                <i class="ph-bold ph-magnifying-glass text-2xl"></i>
+            </a>
+            
+            <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition">
+                <i class="ph-bold ph-heart text-2xl"></i>
+            </a>
+            
+            <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition relative">
+                <div class="w-7 h-7 rounded-full bg-orange-100 overflow-hidden border border-gray-300">
+                    <div class="w-full h-full bg-[#ffc3a0] mt-1"></div>
+                </div>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Theme Logic Script -->
+    <script>
+        const html = document.documentElement;
+        const desktopIcon = document.getElementById('desktop-theme-icon');
+        const mobileIcon = document.getElementById('mobile-theme-icon');
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                html.classList.add('dark');
+                html.classList.remove('light');
+                if(desktopIcon) { desktopIcon.className = 'ph-fill ph-sun text-xl'; }
+                if(mobileIcon) { mobileIcon.className = 'ph-fill ph-sun text-lg'; }
+            } else {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                if(desktopIcon) { desktopIcon.className = 'ph-fill ph-moon text-xl'; }
+                if(mobileIcon) { mobileIcon.className = 'ph-fill ph-moon text-lg'; }
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        window.cycleTheme = function() {
+            const isDark = html.classList.contains('dark');
+            applyTheme(isDark ? 'light' : 'dark');
+        }
+
+        // Initialize based on system or local storage
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                applyTheme('dark');
+            } else {
+                applyTheme('light');
+            }
+        }
+
+        // Listen for system changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('theme')) {
+                applyTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+
+        initTheme();
+    </script>
+</body>
+</html>
+
+

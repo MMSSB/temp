@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Honor Dark Profile Editor</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', '-apple-system', 'sans-serif'] },
+                    colors: {
+                        honor: {
+                            bg: '#000000',       // Pure black background
+                            card: '#1C1C1E',     // Dark gray elements
+                            cardHover: '#2C2C2E',
+                            text: '#FFFFFF',     // White text
+                            sub: '#8A8A8E',      // Gray subtitle
+                            border: '#38383A',   // Borders
+                            blue: '#0A84FF',     // iOS/Honor Blue
+                            green: '#30D158'
+                        }
+                    },
+                    boxShadow: {
+                        'drawer': '0 -4px 30px rgba(0,0,0,0.8)'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { 
+            background-color: #000000; 
+            color: #FFFFFF;
+            overscroll-behavior-y: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            touch-action: pan-x pan-y;
+        }
+
+        /* Hide scrollbar */
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Draggable Bottom Editor Sheet */
+        #bottom-sheet {
+            /* Default state: showing ~45% of height */
+            transform: translateY(35%); 
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            will-change: transform;
+        }
+        #bottom-sheet.expanded {
+            transform: translateY(0%);
+        }
+
+        /* Custom Slider (Dark Mode) */
+        input[type=range] {
+            -webkit-appearance: none; width: 100%; background: transparent; height: 24px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 6px; background: #38383A; border-radius: 3px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 24px; width: 24px; border-radius: 50%; background: #FFFFFF;
+            cursor: pointer; -webkit-appearance: none; margin-top: -9px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        }
+
+        /* Segmented Tools */
+        .segment-wrapper {
+            background: #000000; padding: 4px; border-radius: 12px; display: flex; gap: 2px;
+            border: 1px solid #38383A;
+        }
+        .segment-btn {
+            flex: 1; padding: 8px 12px; border-radius: 8px; font-size: 14px; font-weight: 500;
+            color: #8A8A8E; transition: all 0.2s; text-align: center;
+        }
+        .segment-btn.active { background: #38383A; color: #FFFFFF; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+        /* Icon Grid Buttons */
+        .icon-btn {
+            background: #000000; border: 1px solid #38383A; border-radius: 12px;
+            padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+            color: #8A8A8E; transition: all 0.2s; font-size: 12px; font-weight: 500;
+        }
+        .icon-btn.active {
+            background: #0A84FF; border-color: #0A84FF; color: #FFFFFF;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            color: #8A8A8E; font-weight: 600; font-size: 15px; padding: 8px 16px;
+            border-radius: 20px; transition: all 0.2s; white-space: nowrap;
+        }
+        .tab-nav.active { background: rgba(10, 132, 255, 0.15); color: #0A84FF; }
+
+        /* Color Picker */
+        .color-swatch-wrapper {
+            position: relative; width: 48px; height: 48px; border-radius: 50%;
+            border: 2px solid #38383A; overflow: hidden;
+        }
+        input[type="color"] {
+            -webkit-appearance: none; border: none; width: 200%; height: 200%;
+            position: absolute; top: -50%; left: -50%; cursor: pointer; padding: 0; background: transparent;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; }
+
+        /* Toggles */
+        .toggle-checkbox { display: none; }
+        .toggle-label {
+            display: block; width: 51px; height: 31px; border-radius: 31px;
+            background: #39393D; transition: all 0.3s ease; position: relative; cursor: pointer;
+        }
+        .toggle-label::after {
+            content: ''; position: absolute; top: 2px; left: 2px;
+            width: 27px; height: 27px; background: #fff; border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: all 0.3s cubic-bezier(0.3, 1.5, 0.7, 1);
+        }
+        .toggle-checkbox:checked + .toggle-label { background: #30D158; }
+        .toggle-checkbox:checked + .toggle-label::after { transform: translateX(20px); }
+
+        .svg-container svg { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .panel { display: none; animation: fadeIn 0.3s ease; }
+        .panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="flex justify-center h-screen w-full relative overflow-hidden bg-honor-bg">
+
+    <!-- MAIN APP SCREEN (Hero Avatar Area) -->
+    <div class="w-full max-w-md h-full flex flex-col relative z-0">
+        
+        <!-- Header Actions -->
+        <div class="px-6 pt-12 pb-4 flex justify-between items-center z-10">
+            <button class="text-honor-blue text-[17px] font-medium active:opacity-50">Cancel</button>
+            <div class="flex gap-4 items-center">
+                <button onclick="download('svg')" class="text-honor-blue active:opacity-50"><i data-lucide="download" class="w-6 h-6"></i></button>
+                <button onclick="download('png')" class="bg-honor-blue text-white px-5 py-2 rounded-full font-semibold text-[15px] active:bg-blue-600 transition">Save</button>
+            </div>
+        </div>
+
+        <!-- Central Avatar Display -->
+        <div class="flex-1 flex flex-col items-center justify-start pt-10 px-6">
+            <div class="relative">
+                <div class="w-56 h-56 rounded-full overflow-hidden shadow-2xl border-[3px] border-honor-card bg-black svg-container relative z-10" id="main-avatar">
+                    <!-- SVG injected here -->
+                </div>
+                <!-- Sparkle Badge -->
+                <button onclick="randomizeAll()" class="absolute -bottom-2 -right-2 w-14 h-14 bg-honor-card border-[3px] border-black rounded-full flex items-center justify-center z-20 text-honor-blue active:scale-90 transition shadow-lg">
+                    <i data-lucide="dices" class="w-7 h-7"></i>
+                </button>
+            </div>
+
+            <!-- Identity Input (Prominent Editor Style) -->
+            <div class="mt-8 w-full">
+                <input type="text" id="seed-input" class="w-full bg-transparent border-none outline-none text-center text-3xl font-bold text-white placeholder-honor-sub" placeholder="Enter Name">
+                <p class="text-center text-[13px] text-honor-sub mt-2">Honor ID generates your unique pattern</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- DRAGGABLE BOTTOM SHEET EDITOR -->
+    <div id="bottom-sheet" class="fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto bg-honor-card rounded-t-[32px] shadow-drawer z-50 flex flex-col h-[75vh]">
+        
+        <!-- Drag Handle Area -->
+        <div id="drag-handle" class="w-full pt-4 pb-2 flex flex-col items-center cursor-grab active:cursor-grabbing touch-none z-10 bg-honor-card rounded-t-[32px]">
+            <div class="w-12 h-1.5 bg-[#48484A] rounded-full mb-3"></div>
+            
+            <!-- Tab Navigation (Scrollable horizontally) -->
+            <div class="w-full overflow-x-auto px-4 pb-2 hide-scrollbar flex gap-2 border-b border-honor-border">
+                <button class="tab-nav active" onclick="switchTab('shapes')">Shapes</button>
+                <button class="tab-nav" onclick="switchTab('layout')">Layout</button>
+                <button class="tab-nav" onclick="switchTab('colors')">Colors</button>
+            </div>
+        </div>
+
+        <!-- Sheet Scrollable Content -->
+        <div class="flex-1 overflow-y-auto px-6 py-6 pb-12 custom-scrollbar">
+            
+            <!-- PANEL: SHAPES & THEME -->
+            <div id="panel-shapes" class="panel active space-y-8">
+                <!-- Theme Toggle -->
+                <div>
+                    <h3 class="text-[14px] uppercase tracking-wider text-honor-sub font-semibold mb-3">Generator Theme</h3>
+                    <div class="segment-wrapper">
+                        <button class="segment-btn style-btn active" data-val="geometric">Geometric</button>
+                        <button class="segment-btn style-btn" data-val="identicon">Identicon</button>
+                        <button class="segment-btn style-btn" data-val="invader">Invader</button>
+                    </div>
+                </div>
+
+                <!-- Elements Grid -->
+                <div>
+                    <h3 class="text-[14px] uppercase tracking-wider text-honor-sub font-semibold mb-3">Base Element</h3>
+                    <div class="grid grid-cols-4 gap-3">
+                        <button class="icon-btn shape-btn active" data-val="square">
+                            <div class="w-5 h-5 border-2 border-current rounded-sm"></div> Square
+                        </button>
+                        <button class="icon-btn shape-btn" data-val="circle">
+                            <div class="w-5 h-5 border-2 border-current rounded-full"></div> Circle
+                        </button>
+                        <button class="icon-btn shape-btn" data-val="rounded">
+                            <div class="w-5 h-5 border-2 border-current rounded-md"></div> Round
+                        </button>
+                        <button class="icon-btn shape-btn" data-val="diamond">
+                            <div class="w-5 h-5 border-2 border-current transform rotate-45 scale-75"></div> Diamond
+                        </button>
+                        <button class="icon-btn shape-btn" data-val="triangle">
+                            <i data-lucide="triangle" class="w-5 h-5"></i> Triangle
+                        </button>
+                        <button class="icon-btn shape-btn" data-val="hexagon">
+                            <i data-lucide="hexagon" class="w-5 h-5"></i> Hexagon
+                        </button>
+                        <button class="icon-btn shape-btn" data-val="cross">
+                            <i data-lucide="plus" class="w-5 h-5"></i> Cross
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL: LAYOUT -->
+            <div id="panel-layout" class="panel space-y-8">
+                <!-- Symmetry -->
+                <div>
+                    <h3 class="text-[14px] uppercase tracking-wider text-honor-sub font-semibold mb-3">Symmetry</h3>
+                    <div class="segment-wrapper">
+                        <button class="segment-btn sym-btn active" data-val="horizontal">Horiz</button>
+                        <button class="segment-btn sym-btn" data-val="vertical">Vert</button>
+                        <button class="segment-btn sym-btn" data-val="quad">Quad</button>
+                        <button class="segment-btn sym-btn" data-val="none">None</button>
+                    </div>
+                </div>
+
+                <!-- Sliders -->
+                <div class="space-y-8 bg-[#000000] p-5 rounded-2xl border border-honor-border">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[16px] font-medium text-white">Grid Complexity</span>
+                            <span class="text-[15px] font-bold text-honor-blue" id="val-grid">5x5</span>
+                        </div>
+                        <input type="range" id="grid-size" min="3" max="15" value="5">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[16px] font-medium text-white">Shape Density</span>
+                            <span class="text-[15px] font-bold text-honor-blue" id="val-density">55%</span>
+                        </div>
+                        <input type="range" id="density" min="10" max="90" value="55">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[16px] font-medium text-white">Element Spacing</span>
+                            <span class="text-[15px] font-bold text-honor-blue" id="val-spacing">5%</span>
+                        </div>
+                        <input type="range" id="spacing" min="0" max="80" value="5">
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL: COLORS -->
+            <div id="panel-colors" class="panel space-y-8">
+                
+                <div class="flex justify-between items-center">
+                    <h3 class="text-[14px] uppercase tracking-wider text-honor-sub font-semibold">Palette</h3>
+                    <button onclick="randomizeColors()" class="text-[14px] text-honor-blue font-medium active:opacity-50 flex items-center gap-1">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Shuffle
+                    </button>
+                </div>
+                
+                <!-- Color Pickers -->
+                <div class="flex justify-around bg-[#000000] py-6 px-4 rounded-2xl border border-honor-border">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="color-swatch-wrapper">
+                            <input type="color" id="color-bg" value="#051224">
+                        </div>
+                        <span class="text-[13px] font-medium text-honor-sub">Background</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="color-swatch-wrapper">
+                            <input type="color" id="color-fg1" value="#0A84FF">
+                        </div>
+                        <span class="text-[13px] font-medium text-honor-sub">Primary</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-3 transition-opacity" id="color-fg2-container">
+                        <div class="color-swatch-wrapper">
+                            <input type="color" id="color-fg2" value="#30D158">
+                        </div>
+                        <span class="text-[13px] font-medium text-honor-sub">Accent</span>
+                    </div>
+                </div>
+
+                <!-- Toggles -->
+                <div class="bg-[#000000] rounded-2xl border border-honor-border overflow-hidden">
+                    <div class="flex justify-between items-center p-4 border-b border-[#38383A]">
+                        <div class="flex flex-col">
+                            <span class="text-[16px] font-medium text-white">Dual Color Mode</span>
+                            <span class="text-[12px] text-honor-sub mt-0.5">Use primary and accent colors</span>
+                        </div>
+                        <input type="checkbox" id="toggle-dual" class="toggle-checkbox" checked>
+                        <label for="toggle-dual" class="toggle-label"></label>
+                    </div>
+                    <div class="flex justify-between items-center p-4">
+                        <div class="flex flex-col">
+                            <span class="text-[16px] font-medium text-white">Transparent Export</span>
+                            <span class="text-[12px] text-honor-sub mt-0.5">Removes background on save</span>
+                        </div>
+                        <input type="checkbox" id="toggle-trans" class="toggle-checkbox">
+                        <label for="toggle-trans" class="toggle-label"></label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // ---------------------------------------------------
+        // UI TAB LOGIC
+        // ---------------------------------------------------
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-nav').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById('panel-' + tabId).classList.add('active');
+            
+            // Expand sheet automatically if switching tabs while minimized
+            if (!bottomSheet.classList.contains('expanded')) {
+                bottomSheet.classList.add('expanded');
+            }
+        }
+
+        // ---------------------------------------------------
+        // BOTTOM SHEET DRAG LOGIC (Snap States)
+        // ---------------------------------------------------
+        const bottomSheet = document.getElementById('bottom-sheet');
+        const dragHandle = document.getElementById('drag-handle');
+        
+        let startY = 0;
+        let currentY = 0;
+        let isDragging = false;
+        let sheetHeight = 0;
+
+        dragHandle.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startY = e.touches[0].clientY;
+            sheetHeight = bottomSheet.getBoundingClientRect().height;
+            bottomSheet.style.transition = 'none'; 
+        }, {passive: true});
+
+        dragHandle.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentY = e.touches[0].clientY;
+            const dy = currentY - startY;
+            
+            // If dragging down from expanded
+            if (bottomSheet.classList.contains('expanded') && dy > 0) {
+                bottomSheet.style.transform = `translateY(${dy}px)`;
+            }
+            // If dragging up from collapsed
+            else if (!bottomSheet.classList.contains('expanded') && dy < 0) {
+                // Approximate 35% transform value calculation
+                const baseOffset = sheetHeight * 0.35;
+                const newY = Math.max(0, baseOffset + dy);
+                bottomSheet.style.transform = `translateY(${newY}px)`;
+            }
+        }, {passive: true});
+
+        dragHandle.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            bottomSheet.style.transition = ''; 
+            
+            const dy = currentY - startY;
+            
+            if (bottomSheet.classList.contains('expanded')) {
+                // If dragged down enough, collapse
+                if (dy > sheetHeight * 0.15) {
+                    bottomSheet.classList.remove('expanded');
+                    bottomSheet.style.transform = ''; // reverts to CSS class transform
+                } else {
+                    bottomSheet.style.transform = 'translateY(0%)';
+                }
+            } else {
+                // If dragged up enough, expand
+                if (dy < -(sheetHeight * 0.10)) {
+                    bottomSheet.classList.add('expanded');
+                    bottomSheet.style.transform = 'translateY(0%)';
+                } else {
+                    bottomSheet.style.transform = ''; // reverts to CSS class transform
+                }
+            }
+        });
+
+        // ---------------------------------------------------
+        // GENERATOR LOGIC
+        // ---------------------------------------------------
+        const state = {
+            seed: 'MMS',
+            style: 'geometric', 
+            gridSize: 7,
+            spacing: 5,
+            symmetry: 'horizontal',
+            shape: 'rounded',
+            density: 60,
+            bgColor: '#0A0A0A',
+            fgColor1: '#0A84FF',
+            fgColor2: '#5E5CE6',
+            useDualColor: true,
+            isTransparentBg: false
+        };
+
+        const mainAvatar = document.getElementById('main-avatar');
+        const seedInput = document.getElementById('seed-input');
+
+        function getSeededRandom(seedString) {
+            let h = 2166136261 >>> 0;
+            for (let i = 0; i < seedString.length; i++) h = Math.imul(h ^ seedString.charCodeAt(i), 16777619);
+            return function () {
+                h += h << 13; h ^= h >>> 17; h += h << 5;
+                return (h >>> 0) / 4294967296;
+            };
+        }
+
+        const generateRandomColor = (isBg) => {
+            const h = Math.random() * 360;
+            const s = isBg ? 10 + Math.random() * 20 : 60 + Math.random() * 40;
+            const l = isBg ? 5 + Math.random() * 15 : 50 + Math.random() * 20; // Very dark for dark mode bg
+            const lCalc = l / 100;
+            const a = (s * Math.min(lCalc, 1 - lCalc)) / 100;
+            const f = n => {
+                const k = (n + h / 30) % 12;
+                const color = lCalc - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                return Math.round(255 * color).toString(16).padStart(2, '0');
+            };
+            return `#${f(0)}${f(8)}${f(4)}`;
+        };
+
+        function updateUI() {
+            if(document.activeElement !== seedInput) seedInput.value = state.seed;
+            
+            document.getElementById('grid-size').value = state.gridSize;
+            document.getElementById('val-grid').innerText = `${state.gridSize}x${state.gridSize}`;
+            document.getElementById('spacing').value = state.spacing;
+            document.getElementById('val-spacing').innerText = `${state.spacing}%`;
+            document.getElementById('density').value = state.density;
+            document.getElementById('val-density').innerText = `${state.density}%`;
+            
+            document.getElementById('color-bg').value = state.bgColor;
+            document.getElementById('color-fg1').value = state.fgColor1;
+            document.getElementById('color-fg2').value = state.fgColor2;
+            
+            document.getElementById('toggle-dual').checked = state.useDualColor;
+            document.getElementById('toggle-trans').checked = state.isTransparentBg;
+            document.getElementById('color-fg2-container').style.opacity = state.useDualColor ? '1' : '0.3';
+            document.getElementById('color-fg2-container').style.pointerEvents = state.useDualColor ? 'auto' : 'none';
+
+            // Active States
+            document.querySelectorAll('.style-btn').forEach(b => b.classList.toggle('active', b.dataset.val === state.style));
+            document.querySelectorAll('.sym-btn').forEach(b => b.classList.toggle('active', b.dataset.val === state.symmetry));
+            document.querySelectorAll('.shape-btn').forEach(b => b.classList.toggle('active', b.dataset.val === state.shape));
+        }
+
+        function generateGridData() {
+            const rand = getSeededRandom(state.seed.trim() === '' ? 'empty' : state.seed);
+            let uniqueCols = state.gridSize; let uniqueRows = state.gridSize;
+            if (state.symmetry === 'horizontal' || state.symmetry === 'quad') uniqueCols = Math.ceil(state.gridSize / 2);
+            if (state.symmetry === 'vertical' || state.symmetry === 'quad') uniqueRows = Math.ceil(state.gridSize / 2);
+
+            const uniqueValues = [];
+            for (let i = 0; i < uniqueCols * uniqueRows; i++) {
+                uniqueValues.push({ filled: rand() < (state.density / 100), colorToggle: rand() > 0.5 });
+            }
+
+            const grid = [];
+            for (let r = 0; r < state.gridSize; r++) {
+                for (let c = 0; c < state.gridSize; c++) {
+                    let px = c; let py = r;
+                    if (state.symmetry === 'horizontal' || state.symmetry === 'quad') px = c < uniqueCols ? c : state.gridSize - 1 - c;
+                    if (state.symmetry === 'vertical' || state.symmetry === 'quad') py = r < uniqueRows ? r : state.gridSize - 1 - r;
+                    grid.push({ row: r, col: c, ...uniqueValues[py * uniqueCols + px] });
+                }
+            }
+            return grid;
+        }
+
+        function renderShape(cell, size, offset, fill) {
+            const w = size; const x = cell.col * (100 / state.gridSize) + offset; const y = cell.row * (100 / state.gridSize) + offset;
+            const cx = x + w / 2; const cy = y + w / 2;
+            let currentShape = state.shape;
+            
+            if(state.style === 'identicon' || state.style === 'invader') currentShape = 'square';
+
+            switch (currentShape) {
+                case 'circle': return `<circle cx="${cx}" cy="${cy}" r="${w / 2}" fill="${fill}" />`;
+                case 'rounded': return `<rect x="${x}" y="${y}" width="${w}" height="${w}" rx="${w / 3}" fill="${fill}" />`;
+                case 'diamond': return `<polygon points="${cx},${y} ${x+w},${cy} ${cx},${y+w} ${x},${cy}" fill="${fill}" />`;
+                case 'triangle': return ((cell.row + cell.col) % 2 === 0) ? `<polygon points="${cx},${y} ${x+w},${y+w} ${x},${y+w}" fill="${fill}" />` : `<polygon points="${x},${y} ${x+w},${y} ${cx},${y+w}" fill="${fill}" />`;
+                case 'hexagon': const hq = w/4; return `<polygon points="${cx},${y} ${x+w},${y+hq} ${x+w},${y+w-hq} ${cx},${y+w} ${x},${y+w-hq} ${x},${y+hq}" fill="${fill}" />`;
+                case 'cross': const t = w/3; return `<rect x="${cx - t/2}" y="${y}" width="${t}" height="${w}" fill="${fill}" /><rect x="${x}" y="${cy - t/2}" width="${w}" height="${t}" fill="${fill}" />`;
+                case 'square': default:
+                    if(state.style !== 'geometric') {
+                        const blockW = 100 / state.gridSize;
+                        return `<rect x="${cell.col * blockW - 0.5}" y="${cell.row * blockW - 0.5}" width="${blockW + 1}" height="${blockW + 1}" fill="${fill}" />`;
+                    }
+                    return `<rect x="${x}" y="${y}" width="${w}" height="${w}" fill="${fill}" />`;
+            }
+        }
+
+        function render() {
+            if(state.style === 'invader') { state.symmetry = 'horizontal'; state.shape = 'square'; state.spacing = 0; }
+            if(state.style === 'identicon') { state.shape = 'square'; state.spacing = 0; if(state.symmetry !== 'horizontal' && state.symmetry !== 'none') state.symmetry = 'horizontal'; }
+
+            updateUI();
+
+            const gridData = generateGridData();
+            const cellSize = 100 / state.gridSize;
+            const gap = state.style === 'geometric' ? cellSize * (state.spacing / 100) : 0;
+            const actualSize = cellSize - gap;
+            const offset = gap / 2;
+
+            let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">`;
+            if (!state.isTransparentBg) svgContent += `<rect width="100" height="100" fill="${state.bgColor}" />`;
+
+            gridData.forEach(cell => {
+                if (cell.filled) {
+                    const fill = state.useDualColor && cell.colorToggle ? state.fgColor2 : state.fgColor1;
+                    svgContent += renderShape(cell, actualSize, offset, fill);
+                }
+            });
+            svgContent += `</svg>`;
+            
+            mainAvatar.innerHTML = svgContent;
+            mainAvatar.style.backgroundColor = state.isTransparentBg ? 'transparent' : state.bgColor;
+        }
+
+        // Listeners
+        seedInput.addEventListener('input', e => { state.seed = e.target.value; render(); });
+        document.getElementById('grid-size').addEventListener('input', e => { state.gridSize = parseInt(e.target.value); render(); });
+        document.getElementById('spacing').addEventListener('input', e => { state.spacing = parseInt(e.target.value); render(); });
+        document.getElementById('density').addEventListener('input', e => { state.density = parseInt(e.target.value); render(); });
+        document.getElementById('color-bg').addEventListener('input', e => { state.bgColor = e.target.value; render(); });
+        document.getElementById('color-fg1').addEventListener('input', e => { state.fgColor1 = e.target.value; render(); });
+        document.getElementById('color-fg2').addEventListener('input', e => { state.fgColor2 = e.target.value; render(); });
+        document.getElementById('toggle-dual').addEventListener('change', e => { state.useDualColor = e.target.checked; render(); });
+        document.getElementById('toggle-trans').addEventListener('change', e => { state.isTransparentBg = e.target.checked; render(); });
+
+        document.querySelectorAll('.style-btn').forEach(btn => btn.addEventListener('click', e => { state.style = e.target.dataset.val; render(); }));
+        document.querySelectorAll('.sym-btn').forEach(btn => btn.addEventListener('click', e => { state.symmetry = e.target.dataset.val; render(); }));
+        document.querySelectorAll('.shape-btn').forEach(btn => btn.addEventListener('click', e => { state.shape = e.target.dataset.val; if(state.style !== 'geometric') state.style = 'geometric'; render(); }));
+
+        window.randomizeColors = () => {
+            state.bgColor = generateRandomColor(true);
+            state.fgColor1 = generateRandomColor(false);
+            state.fgColor2 = generateRandomColor(false);
+            render();
+        };
+
+        window.randomizeAll = () => {
+            const prefixes = ['Honor', 'Magic', 'MMS', 'Dark', 'Neon', 'Cyber'];
+            const suffixes = ['User', 'ID', 'Bot', 'Pro', 'Max'];
+            state.seed = `${prefixes[Math.floor(Math.random()*prefixes.length)]} ${suffixes[Math.floor(Math.random()*suffixes.length)]} ${Math.floor(Math.random()*999)}`;
+            randomizeColors();
+            // Pulse effect
+            mainAvatar.classList.add('scale-95');
+            setTimeout(() => mainAvatar.classList.remove('scale-95'), 150);
+        };
+
+        window.download = (type) => {
+            const svgElement = mainAvatar.querySelector('svg');
+            if (!svgElement) return;
+            const fileName = `${(state.seed || 'avatar').replace(/[^a-z0-9]/gi, '_').toLowerCase()}`;
+
+            if (type === 'svg') {
+                const source = new XMLSerializer().serializeToString(svgElement);
+                const url = URL.createObjectURL(new Blob([source], { type: 'image/svg+xml;charset=utf-8' }));
+                const link = document.createElement('a'); link.href = url; link.download = `${fileName}.svg`;
+                document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url);
+            } else if (type === 'png') {
+                const clone = svgElement.cloneNode(true);
+                clone.setAttribute('width', '1024'); clone.setAttribute('height', '1024');
+                const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: 'image/svg+xml;charset=utf-8' }));
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 1024;
+                    const ctx = canvas.getContext('2d');
+                    if (!state.isTransparentBg) { ctx.fillStyle = state.bgColor; ctx.fillRect(0, 0, 1024, 1024); }
+                    ctx.drawImage(img, 0, 0, 1024, 1024);
+                    URL.revokeObjectURL(url);
+                    const link = document.createElement('a'); link.href = canvas.toDataURL('image/png'); link.download = `${fileName}.png`;
+                    link.click();
+                };
+                img.src = url;
+            }
+        };
+
+        // Initial Load
+        render();
+    </script>
+</body>
+</html>
+
+

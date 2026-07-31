@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Bento App</title>
+
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* === CSS Variables & Resets === */
+        :root {
+            --bg-body: #f4f7fe;
+            --bg-card: #ffffff;
+            --text-main: #2b3674;
+            --text-muted: #a3aed0;
+            --primary: #4318ff;
+            --primary-hover: #3311db;
+            --shadow-soft: 0 18px 40px rgba(112, 144, 176, 0.12);
+            --radius-lg: 24px;
+            --radius-sm: 14px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* === Desktop Layout === */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar (Desktop Only) */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-card);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid rgba(0,0,0,0.02);
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 15px;
+        }
+
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-items a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .nav-items a i { font-size: 1.3rem; }
+        
+        .nav-items a:hover, .nav-items a.active {
+            background: var(--bg-body);
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .greeting h1 { font-size: 1.8rem; margin-bottom: 5px; }
+        .greeting p { color: var(--text-muted); font-size: 0.9rem; }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--bg-card);
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .search-box {
+            border: none;
+            outline: none;
+            padding: 10px;
+            background: transparent;
+            width: 200px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .icon-btn:hover { color: var(--primary); }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        /* Bento Grid System - Built for stability on large screens */
+        .bento-grid {
+            display: grid;
+            gap: 24px;
+            /* Default Large Desktop View */
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: minmax(150px, auto);
+        }
+
+        .bento-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+        
+        .bento-card:hover { transform: translateY(-3px); }
+
+        .card-wide { grid-column: span 2; grid-row: span 2; }
+        .card-tall { grid-column: span 1; grid-row: span 2; }
+
+        /* Card Internals */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-title { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+        .stat-value { font-size: 2.2rem; font-weight: 700; color: var(--text-main); margin-top: auto; }
+        .stat-trend { color: #05cd99; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 5px;}
+
+        /* Modern Button */
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary:hover { background: var(--primary-hover); box-shadow: 0 10px 20px rgba(67, 24, 255, 0.2); }
+
+        /* === Modal (Desktop) === */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(43, 54, 116, 0.4);
+            backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000;
+            opacity: 0; visibility: hidden;
+            transition: var(--transition);
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        .modal-content {
+            background: var(--bg-card);
+            width: 400px;
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            transform: translateY(30px);
+            transition: var(--transition);
+            box-shadow: var(--shadow-soft);
+        }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;}
+        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted);}
+        
+        .internal-form input {
+            width: 100%; padding: 14px; margin-bottom: 15px;
+            border: 1px solid #e2e8f0; border-radius: var(--radius-sm);
+            outline: none; font-family: 'Inter';
+        }
+
+        /* === Mobile Elements (Hidden on Desktop) === */
+        .mobile-nav { display: none; }
+        .bottom-sheet { display: none; }
+
+        /* === Responsive Rules === */
+        /* Strict breakpoint for Desktop vs Tablets */
+        @media (max-width: 1100px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+            .card-wide { grid-column: span 2; }
+            .card-tall { grid-column: span 1; }
+        }
+
+        /* Mobile Breakpoint */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 20px; padding-bottom: 100px; }
+            .header-actions { display: none; } /* Simplified header */
+            .bento-grid { grid-template-columns: 1fr; }
+            .card-wide, .card-tall { grid-column: span 1; grid-row: auto; }
+            
+            /* Mobile Bottom Nav */
+            .mobile-nav {
+                display: flex; justify-content: space-around; align-items: center;
+                position: fixed; bottom: 0; left: 0; width: 100%;
+                background: var(--bg-card);
+                padding: 15px 20px; padding-bottom: calc(15px + env(safe-area-inset-bottom));
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+                border-radius: 24px 24px 0 0;
+                z-index: 900;
+            }
+            .mobile-nav-item {
+                display: flex; flex-direction: column; align-items: center; gap: 5px;
+                color: var(--text-muted); text-decoration: none; font-size: 0.75rem;
+            }
+            .mobile-nav-item.active { color: var(--primary); }
+            .mobile-nav-item i { font-size: 1.4rem; }
+
+            /* Draggable Bottom Sheet for Mobile Menu */
+            .bottom-sheet {
+                display: flex; flex-direction: column;
+                position: fixed; bottom: -100%; left: 0; width: 100%;
+                background: var(--bg-card);
+                border-radius: 30px 30px 0 0;
+                box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
+                z-index: 999;
+                transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                padding: 20px; padding-bottom: 40px;
+            }
+            .bottom-sheet.open { bottom: 0; }
+            
+            .drag-handle {
+                width: 40px; height: 5px; background: #e2e8f0;
+                border-radius: 10px; margin: 0 auto 20px auto;
+                cursor: grab;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Desktop Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="ph-fill ph-planet"></i> NexusUI
+            </div>
+            <nav class="nav-items">
+                <!-- Phosphor Icons used here -->
+                <a href="#" class="active"><i class="ph ph-squares-four"></i> Dashboard</a>
+                <a href="#"><i class="ph ph-chart-line-up"></i> Analytics</a>
+                <a href="#"><i class="ph ph-folder-notch-open"></i> Projects</a>
+                <a href="#"><i class="ph ph-gear"></i> Settings</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <div class="greeting">
+                    <h1>Hi, Developer 👋</h1>
+                    <p>Welcome back to your workspace</p>
+                </div>
+                <div class="header-actions">
+                    <!-- Remix Icon used here -->
+                    <i class="ri-search-2-line icon-btn"></i>
+                    <input type="text" class="search-box" placeholder="Search data...">
+                    <!-- FontAwesome Icon used here -->
+                    <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+                    <!-- Random Profile Image -->
+                    <img src="https://i.pravatar.cc/150?img=33" alt="Profile" class="profile-img">
+                </div>
+            </header>
+
+            <!-- Bento Grid -->
+            <section class="bento-grid">
+                <!-- Large Overview Card -->
+                <div class="bento-card card-wide">
+                    <div class="card-header">
+                        <span class="card-title">Total Revenue</span>
+                        <button class="icon-btn" onclick="openModal()"><i class="ph ph-plus-circle"></i></button>
+                    </div>
+                    <div class="stat-trend"><i class="ri-arrow-right-up-line"></i> +24.5% from last month</div>
+                    <div class="stat-value">$84,592.00</div>
+                    <!-- Minimal fake chart using CSS -->
+                    <div style="margin-top: 20px; height: 60px; background: linear-gradient(180deg, rgba(67,24,255,0.1) 0%, rgba(255,255,255,0) 100%); border-radius: 8px; border-bottom: 2px solid var(--primary);"></div>
+                </div>
+
+                <!-- Profile/Quick Action Card -->
+                <div class="bento-card card-tall" style="align-items: center; text-align: center;">
+                    <img src="https://i.pravatar.cc/150?img=33" alt="Profile Large" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px; box-shadow: var(--shadow-soft);">
+                    <h3 style="margin-bottom: 5px;">MMSB Admin</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">System Coordinator</p>
+                    <button class="btn-primary" onclick="openModal()">
+                        <i class="ri-add-line"></i> New Task
+                    </button>
+                </div>
+
+                <!-- Small Stat Card 1 -->
+                <div class="bento-card">
+                    <div class="card-header">
+                        <div style="background: #f4f7fe; padding: 10px; border-radius: 50%; color: var(--primary);">
+                            <i class="fa-solid fa-server"></i>
+                        </div>
+                    </div>
+                    <span class="card-title">Active Servers</span>
+                    <div class="stat-value" style="font-size: 1.8rem;">12 Nodes</div>
+                </div>
+
+                <!-- Small Stat Card 2 -->
+                <div class="bento-card">
+                    <div class="card-header">
+                        <div style="background: #f4f7fe; padding: 10px; border-radius: 50%; color: #05cd99;">
+                            <i class="ph-fill ph-check-circle"></i>
+                        </div>
+                    </div>
+                    <span class="card-title">Task Completion</span>
+                    <div class="stat-value" style="font-size: 1.8rem;">94%</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Desktop Modal (For Internal Admin Actions, NOT Registration) -->
+    <div class="modal-overlay" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Task</h3>
+                <button class="close-modal" onclick="closeModal()"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="internal-form">
+                <input type="text" placeholder="Task Title">
+                <input type="text" placeholder="Assignee">
+                <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="closeModal()">Save Task</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <a href="#" class="mobile-nav-item active"><i class="ph-fill ph-house"></i> Home</a>
+        <a href="#" class="mobile-nav-item"><i class="ri-pie-chart-2-fill"></i> Stats</a>
+        <a href="#" class="mobile-nav-item"><i class="fa-solid fa-bell"></i> Alerts</a>
+        <!-- This triggers the Bottom Sheet -->
+        <a href="#" class="mobile-nav-item" onclick="toggleBottomSheet(event)"><i class="ph-bold ph-list"></i> Menu</a>
+    </nav>
+
+    <!-- Mobile Draggable Bottom Sheet -->
+    <div class="bottom-sheet" id="bottomSheet">
+        <div class="drag-handle" id="dragHandle"></div>
+        <h3 style="margin-bottom: 20px;">Quick Actions</h3>
+        <div class="nav-items">
+            <a href="#" onclick="openModal(); toggleBottomSheet(event);"><i class="ri-add-box-line"></i> Add New Task</a>
+            <a href="#"><i class="ph ph-gear"></i> System Settings</a>
+            <a href="#"><i class="fa-regular fa-circle-user"></i> My Profile</a>
+        </div>
+    </div>
+
+    <!-- JavaScript functionality -->
+    <script>
+        // Modal Logic
+        const modal = document.getElementById('taskModal');
+        
+        function openModal() {
+            modal.classList.add('active');
+        }
+        
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        // Close modal if clicked outside the content
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Bottom Sheet Logic (Mobile)
+        const bottomSheet = document.getElementById('bottomSheet');
+        let isSheetOpen = false;
+
+        function toggleBottomSheet(e) {
+            if(e) e.preventDefault();
+            isSheetOpen = !isSheetOpen;
+            if(isSheetOpen) {
+                bottomSheet.classList.add('open');
+            } else {
+                bottomSheet.classList.remove('open');
+            }
+        }
+
+        // Simple touch simulation to close sheet by tapping the handle
+        const dragHandle = document.getElementById('dragHandle');
+        dragHandle.addEventListener('click', () => {
+            toggleBottomSheet();
+        });
+
+        // Swipe down to close logic (Basic Implementation)
+        let startY;
+        bottomSheet.addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+        });
+
+        bottomSheet.addEventListener('touchmove', (e) => {
+            const currentY = e.touches[0].clientY;
+            if (currentY - startY > 50) { // If swiped down 50px
+                isSheetOpen = false;
+                bottomSheet.classList.remove('open');
+            }
+        }, { passive: true });
+    </script>
+</body>
+</html>

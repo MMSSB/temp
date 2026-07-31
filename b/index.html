@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>u.live - Fabian Profile Clone</title>
+  
+  <!-- Icon Libraries: FontAwesome, RemixIcon, Phosphor Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Floated Transparent Navbar (Solid when scrolled) -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <!-- Floated Logo Pill Background -->
+      <div class="nav-logo floated-logo">
+        <span class="logo-icon"><i class="ph-fill ph-circle"></i></span>
+        <span class="logo-text">u.live</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#" class="active">All posts</a>
+        <a href="#">Templates</a>
+        <a href="#">Components</a>
+        <a href="#">Mockups</a>
+        <a href="#">3D Assets</a>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Like Counter Toggle -->
+        <div class="like-counter">
+          <i class="ri-heart-fill heart-icon"></i>
+          <span>21</span>
+          <div class="toggle-switch" id="likeToggle">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+
+        <!-- Search Icon -->
+        <button class="icon-btn search-btn" aria-label="Search">
+          <i class="ph ph-magnifying-glass"></i>
+        </button>
+
+        <!-- User Avatar -->
+        <div class="user-avatar-sm">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- EDITED: Collapsible Floated Bottom-Left Theme Switcher -->
+  <div class="floating-theme-widget" id="floatingThemeWidget">
+    <!-- Hidden Expandable Options Menu -->
+    <div class="theme-options-collapse" id="themeOptionsCollapse">
+      <button class="theme-pill-btn" data-mode="light" aria-label="Light Mode" title="Light Mode">
+        <i class="ph ph-sun"></i>
+      </button>
+      <button class="theme-pill-btn" data-mode="dark" aria-label="Dark Mode" title="Dark Mode">
+        <i class="ph ph-moon"></i>
+      </button>
+      <button class="theme-pill-btn active" data-mode="system" aria-label="System Theme" title="System Theme">
+        <i class="ph ph-desktop"></i>
+      </button>
+    </div>
+
+    <!-- Main Trigger Button -->
+    <button class="theme-trigger-btn" id="themeTriggerBtn" aria-label="Toggle Theme Menu" title="Choose Theme">
+      <i class="ph ph-desktop" id="activeThemeIcon"></i>
+    </button>
+  </div>
+
+  <!-- Main 1:1 Layout Area -->
+  <main class="main-container">
+    
+    <!-- Left Column: Designer Profile Sidebar -->
+    <aside class="profile-card">
+      <div class="avatar-lg">
+        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80" alt="Fabian">
+      </div>
+      <h1 class="profile-name">Fabian</h1>
+      <p class="profile-bio">UI/UX Designer. Curated premium assets for startups and creators.</p>
+
+      <div class="tags-section">
+        <span class="tags-label">Tags</span>
+        <div class="tags-grid">
+          <span class="tag">Dashboard</span>
+          <span class="tag">Mobile App</span>
+          <span class="tag">Web</span>
+          <span class="tag">Dark</span>
+          <span class="tag">Light</span>
+          <span class="tag">Design system</span>
+          <span class="tag">UI kits</span>
+          <span class="tag">3D</span>
+          <span class="tag">Social</span>
+          <span class="tag">Illustration</span>
+          <span class="tag">3D</span>
+        </div>
+      </div>
+
+      <div class="profile-stats">
+        <div class="stat-item">
+          <i class="ph ph-folder-open"></i>
+          <strong>48</strong> <span>freebies</span>
+        </div>
+        <div class="stat-item">
+          <i class="ph ph-download-simple"></i>
+          <strong>2.5k</strong> <span>copies</span>
+        </div>
+      </div>
+
+      <div class="profile-link">
+        <i class="ph ph-link"></i>
+        <a href="#" target="_blank">u.live/fabian</a>
+      </div>
+
+      <div class="social-links">
+        <a href="#" aria-label="Twitter"><i class="ri-twitter-x-line"></i></a>
+        <a href="#" aria-label="Dribbble"><i class="ri-dribbble-line"></i></a>
+        <a href="#" aria-label="Behance"><i class="ri-behance-line"></i></a>
+        <a href="#" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+      </div>
+    </aside>
+
+    <!-- Right Column: 3-Column Assets Feed -->
+    <section class="content-area">
+      
+      <!-- Feed Tabs (Active / Pending) -->
+      <div class="feed-tabs">
+        <button class="tab-btn active">Active</button>
+        <button class="tab-btn">Pending</button>
+      </div>
+
+      <!-- 1:1 Screenshot Masonry Grid -->
+      <div class="gallery-grid">
+        
+        <!-- Column 1, Card 1: Dashboard Dark Widget -->
+        <div class="card card-square">
+          <div class="card-preview dark-preview">
+            <div class="mock-widget">
+              <div class="widget-header">
+                <span class="dot"></span>
+                <span>607</span>
+              </div>
+              <div class="chart-bars">
+                <span style="height: 40%"></span>
+                <span style="height: 80%"></span>
+                <span style="height: 60%"></span>
+                <span style="height: 90%"></span>
+                <span style="height: 50%"></span>
+                <span style="height: 75%"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2, Card 1: 3D Blue Monster -->
+        <div class="card card-square">
+          <div class="card-preview light-preview">
+            <img class="asset-img" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=500&q=80" alt="3D Blue Monster">
+          </div>
+        </div>
+
+        <!-- Column 3, Card 1: Tall Dark Mobile App UI (Spans 2 rows) -->
+        <div class="card card-tall">
+          <div class="card-preview dark-preview">
+            <div class="mock-mobile-app">
+              <div class="mock-nav"></div>
+              <div class="mock-hero-box">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80" alt="mini character">
+              </div>
+              <div class="mock-list">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 1, Card 2: Light List Widget -->
+        <div class="card card-square">
+          <div class="card-preview light-preview">
+            <div class="mock-list-widget">
+              <div class="list-row"><span class="circle"></span><span class="line"></span></div>
+              <div class="list-row"><span class="circle"></span><span class="line"></span></div>
+              <div class="list-row"><span class="circle"></span><span class="line"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2, Card 2: Dark Finance Card ($3,326) -->
+        <div class="card card-square">
+          <div class="card-preview dark-preview">
+            <div class="mock-finance">
+              <small>Balance</small>
+              <h3>$3,326</h3>
+              <div class="mini-wave"></div>
+              <button class="mock-btn">Send</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 3, Card 2: Small Floating Dark Bar ("Today") -->
+        <div class="card card-small">
+          <div class="card-preview dark-preview flex-center">
+            <div class="mock-pill-bar">
+              <span>Today</span>
+              <i class="ph ph-caret-down"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 1, Card 3: 3D Astronaut -->
+        <div class="card card-square">
+          <div class="card-preview light-preview">
+            <img class="asset-img" src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=500&q=80" alt="3D Astronaut">
+          </div>
+        </div>
+
+        <!-- Column 2, Card 3: Light Dashboard Dashboard Form / Modal -->
+        <div class="card card-square">
+          <div class="card-preview light-preview">
+            <div class="mock-modal">
+              <div class="modal-line"></div>
+              <div class="modal-line short"></div>
+              <div class="modal-actions">
+                <span class="btn-xs light"></span>
+                <span class="btn-xs dark"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

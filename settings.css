@@ -1,0 +1,954 @@
+    /* =========================================================================
+       SETTINGS PAGE UI (DESKTOP & NATIVE MOBILE APP FEEL)
+    ========================================================================== */
+    .settings-layout {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 32px 100px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 80px;
+      align-items: start;
+      width: 100%;
+    }
+
+    .mobile-settings-header {
+      display: none; /* Hidden on desktop */
+    }
+
+    /* --- Left Sidebar Navigation --- */
+    .settings-sidebar {
+      position: sticky;
+      top: 100px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .settings-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .settings-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      border-radius: 99px;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .settings-nav-item i {
+      font-size: 1.15rem;
+    }
+
+    .settings-nav-item.active {
+      border-color: #4f46e5;
+      color: var(--text-main);
+      background: var(--bg-card);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .settings-nav-item:hover:not(.active) {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border-color: var(--text-muted);
+    }
+
+    /* --- Right Content Area --- */
+    .settings-content {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .desktop-settings-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 48px;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+    }
+
+    .settings-section {
+      margin-bottom: 56px;
+      width: 100%;
+    }
+
+    .section-heading {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 28px;
+      color: var(--text-main);
+    }
+
+    /* Avatar Row */
+    .avatar-upload-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 36px;
+      width: 100%;
+    }
+
+    .avatar-upload-circle {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .avatar-upload-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.2s ease;
+    }
+
+    .avatar-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .avatar-upload-circle:hover .avatar-overlay {
+      opacity: 1;
+    }
+
+    .avatar-upload-circle:hover {
+      border-color: #4f46e5;
+      transform: scale(1.05);
+    }
+
+    .avatar-upload-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      max-width: 320px;
+      line-height: 1.6;
+    }
+
+    /* Forms & Floating Labels */
+    .settings-form {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      width: 100%;
+      max-width: 650px;
+    }
+
+    .settings-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      width: 100%;
+    }
+
+    .settings-input-group {
+      position: relative;
+      width: 100%;
+    }
+
+    .settings-input-group label {
+      position: absolute;
+      top: -9px;
+      left: 16px;
+      background: var(--bg-main); 
+      padding: 0 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-main);
+      z-index: 2;
+      transition: color 0.2s ease, background 0.3s ease;
+    }
+
+    .settings-input-group input,
+    .settings-input-group select {
+      width: 100%;
+      padding: 16px 18px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background: transparent;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      appearance: none;
+    }
+
+    .settings-input-group input::placeholder,
+    .settings-input-group select:invalid {
+      color: var(--text-light);
+    }
+
+    .settings-input-group input:focus,
+    .settings-input-group select:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
+
+    .settings-input-group input:focus + label,
+    .settings-input-group select:focus + label {
+      color: #4f46e5;
+    }
+
+    .settings-input-group .select-arrow {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .btn-mobile-save {
+      display: none; 
+    }
+
+    /* =========================================================================
+       FIXED SETTINGS RESPONSIVE QUERIES (MOBILE FIXES)
+    ========================================================================== */
+
+    @media (max-width: 1024px) {
+      .settings-layout {
+        grid-template-columns: 220px 1fr;
+        gap: 40px;
+        padding: 32px 24px 100px;
+      }
+    }
+
+    @media (max-width: 880px) {
+      /* ENFORCE STRICT WIDTH TO PREVENT OVERFLOW CUTOFFS */
+      html, body {
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+
+      .settings-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 24px 16px 130px; 
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+      }
+      
+      .settings-sidebar {
+        position: relative;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+      }
+      
+      .desktop-settings-title { display: none; }
+      
+      .mobile-settings-header {
+        display: block;
+        text-align: left;
+        margin-bottom: 4px;
+        padding-left: 4px;
+      }
+      
+      .mobile-settings-header h2 {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--text-main);
+      }
+
+      /* Horizontal scrolling for tabs safely contained */
+      .settings-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 12px;
+        gap: 10px;
+        -ms-overflow-style: none;  
+        scrollbar-width: none;  
+        scroll-snap-type: x mandatory; 
+        width: 100%;
+        max-width: 100vw;
+      }
+      
+      .settings-nav::-webkit-scrollbar { display: none; }
+
+      .settings-nav-item {
+        scroll-snap-align: start;
+        white-space: nowrap;
+        padding: 10px 18px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-card);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      }
+
+      .settings-nav-item.active {
+        background: var(--text-main);
+        color: var(--bg-main);
+        border-color: var(--text-main);
+      }
+
+      /* Mobile Cards ensuring they don't break width */
+      .settings-section {
+        background: var(--bg-card);
+        padding: 24px 16px; /* Reduced padding slightly to prevent inner overflow */
+        border-radius: 24px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 24px;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden; /* Force containment */
+      }
+
+      .section-heading {
+        font-size: 1.35rem;
+        margin-bottom: 24px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      /* Floating label background matched to card */
+      .settings-input-group label {
+        background: var(--bg-card); 
+      }
+
+      .avatar-upload-row {
+        flex-direction: column;
+        text-align: center;
+        gap: 14px;
+        width: 100%;
+      }
+
+      .avatar-upload-circle {
+        width: 96px;
+        height: 96px;
+      }
+
+      .avatar-upload-desc {
+        margin: 0 auto;
+        font-size: 0.85rem;
+        max-width: 100%; /* Override the hardcoded width to prevent overflow */
+      }
+
+      .settings-form { 
+        max-width: 100%; 
+        width: 100%; 
+        gap: 24px; 
+      }
+      
+      .settings-form-row { 
+        grid-template-columns: 1fr; 
+        gap: 24px; 
+        width: 100%; 
+      }
+
+      .btn-mobile-save {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        background: var(--text-main);
+        color: var(--bg-main);
+        border: none;
+        padding: 15px;
+        border-radius: 14px;
+        font-size: 1rem;
+        font-weight: 700;
+        margin-top: 12px;
+        box-shadow: var(--shadow-sm);
+        transition: transform 0.2s ease;
+        cursor: pointer;
+      }
+      
+      .btn-mobile-save:active {
+        transform: scale(0.98);
+      }
+    }
+
+    @media (max-width: 400px) {
+      .settings-section {
+        padding: 20px 14px;
+        border-radius: 20px;
+      }
+      .mobile-settings-header h2 {
+        font-size: 1.45rem;
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* =========================================================================
+   SETTINGS & SECURITY PAGE UI (DESKTOP & NATIVE MOBILE APP FEEL)
+   File: settings.css
+========================================================================== */
+.settings-layout {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 32px 100px;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 80px;
+  align-items: start;
+  width: 100%;
+}
+
+.mobile-settings-header {
+  display: none; /* Hidden on desktop */
+}
+
+/* --- Left Sidebar Navigation --- */
+.settings-sidebar {
+  position: sticky;
+  top: 100px;
+  width: 100%;
+  min-width: 0;
+}
+
+.settings-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.settings-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: 99px;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.settings-nav-item i {
+  font-size: 1.15rem;
+}
+
+.settings-nav-item.active {
+  border-color: #4f46e5;
+  color: var(--text-main);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-nav-item:hover:not(.active) {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border-color: var(--text-muted);
+}
+
+/* --- Right Content Area --- */
+.settings-content {
+  width: 100%;
+  min-width: 0;
+}
+
+.desktop-settings-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 48px;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
+}
+
+.settings-section {
+  margin-bottom: 56px;
+  width: 100%;
+}
+
+.section-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 28px;
+  color: var(--text-main);
+}
+
+/* Avatar Row */
+.avatar-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 36px;
+  width: 100%;
+}
+
+.avatar-upload-circle {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.avatar-upload-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.2s ease;
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.avatar-upload-circle:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.avatar-upload-circle:hover {
+  border-color: #4f46e5;
+  transform: scale(1.05);
+}
+
+.avatar-upload-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  max-width: 320px;
+  line-height: 1.6;
+}
+
+/* Forms & Floating Labels */
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+  max-width: 650px;
+}
+
+.settings-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  width: 100%;
+}
+
+.settings-input-group {
+  position: relative;
+  width: 100%;
+}
+
+.settings-input-group label {
+  position: absolute;
+  top: -9px;
+  left: 16px;
+  background: var(--bg-main); 
+  padding: 0 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-main);
+  z-index: 2;
+  transition: color 0.2s ease, background 0.3s ease;
+}
+
+.settings-input-group input,
+.settings-input-group select {
+  width: 100%;
+  padding: 16px 18px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  outline: none;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  appearance: none;
+}
+
+.settings-input-group input::placeholder,
+.settings-input-group select:invalid {
+  color: var(--text-light);
+}
+
+.settings-input-group input:focus,
+.settings-input-group select:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+.settings-input-group input:focus + label,
+.settings-input-group select:focus + label {
+  color: #4f46e5;
+}
+
+.settings-input-group .select-arrow {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.btn-mobile-save {
+  display: none; 
+}
+
+/* =========================================================================
+   SECURITY SPECIFIC UI COMPONENTS
+========================================================================== */
+.security-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 20px 24px;
+  border-radius: 16px;
+  max-width: 650px;
+}
+
+.security-info h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text-main);
+}
+
+.security-info p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  padding: 10px 18px;
+  border-radius: 10px;
+  color: var(--text-main);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  border-color: #4f46e5;
+  color: #4f46e5;
+}
+
+/* Session List */
+.session-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 650px;
+}
+
+.session-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+}
+
+.session-icon {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+}
+
+.session-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.session-details strong {
+  font-size: 0.92rem;
+  color: var(--text-main);
+}
+
+.session-details span {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.session-badge.active {
+  background: #dcfce7;
+  color: #16a34a;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 99px;
+}
+
+.btn-text-danger {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-text-danger:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================================
+   FIXED SETTINGS RESPONSIVE QUERIES (MOBILE FIXES)
+========================================================================== */
+@media (max-width: 1024px) {
+  .settings-layout {
+    grid-template-columns: 220px 1fr;
+    gap: 40px;
+    padding: 32px 24px 100px;
+  }
+}
+
+@media (max-width: 880px) {
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  .settings-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 24px 16px 130px; 
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  .settings-sidebar {
+    position: relative;
+    top: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .desktop-settings-title { display: none; }
+  
+  .mobile-settings-header {
+    display: block;
+    text-align: left;
+    margin-bottom: 4px;
+    padding-left: 4px;
+  }
+  
+  .mobile-settings-header h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text-main);
+  }
+
+  .settings-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    gap: 10px;
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+    scroll-snap-type: x mandatory; 
+    width: 100%;
+    max-width: 100vw;
+  }
+  
+  .settings-nav::-webkit-scrollbar { display: none; }
+
+  .settings-nav-item {
+    scroll-snap-align: start;
+    white-space: nowrap;
+    padding: 10px 18px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  }
+
+  .settings-nav-item.active {
+    background: var(--text-main);
+    color: var(--bg-main);
+    border-color: var(--text-main);
+  }
+
+  .settings-section {
+    background: var(--bg-card);
+    padding: 24px 16px;
+    border-radius: 24px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 24px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .section-heading {
+    font-size: 1.35rem;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .settings-input-group label {
+    background: var(--bg-card); 
+  }
+
+  .avatar-upload-row {
+    flex-direction: column;
+    text-align: center;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .avatar-upload-circle {
+    width: 96px;
+    height: 96px;
+  }
+
+  .avatar-upload-desc {
+    margin: 0 auto;
+    font-size: 0.85rem;
+    max-width: 100%;
+  }
+
+  .settings-form { 
+    max-width: 100%; 
+    width: 100%; 
+    gap: 24px; 
+  }
+  
+  .settings-form-row { 
+    grid-template-columns: 1fr; 
+    gap: 24px; 
+    width: 100%; 
+  }
+
+  .security-card-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-mobile-save {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: var(--text-main);
+    color: var(--bg-main);
+    border: none;
+    padding: 15px;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .btn-mobile-save:active {
+    transform: scale(0.98);
+  }
+}
+
+@media (max-width: 400px) {
+  .settings-section {
+    padding: 20px 14px;
+    border-radius: 20px;
+  }
+  .mobile-settings-header h2 {
+    font-size: 1.45rem;
+  }
+}

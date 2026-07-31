@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>u.live - Account Settings</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="settings.css">
+
+  <style>
+
+  </style>
+</head>
+<body>
+
+  <!-- Floated Transparent Navbar (Solid when scrolled) -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo floated-logo" style="text-decoration:none;">
+        <span class="logo-icon"><i class="ph-fill ph-circle"></i></span>
+        <span class="logo-text">u.live</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#" class="active">All posts</a>
+        <a href="#">Templates</a>
+        <a href="#">Components</a>
+        <a href="#">Mockups</a>
+        <a href="#">3D Assets</a>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- =========================================================
+             COMMENTED FOR FUTURE UPDATES: OLD LIKES SWITCH
+        ========================================================== -->
+        <!--
+        <div class="like-counter">
+          <i class="ri-heart-fill heart-icon"></i>
+          <span>21</span>
+          <div class="toggle-switch" id="likeToggle">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        -->
+
+        <!-- NEW: NOTIFICATIONS & BOOKMARK ICONS IN NAVBAR -->
+                 <button class="icon-btn search-btn" aria-label="Search">
+          <i class="ph ph-magnifying-glass"></i>
+        </button>
+
+        <button class="icon-btn" aria-label="Bookmarks" title="Bookmarks">
+          <i class="ph ph-bookmark-simple"></i>
+        </button>
+        <button class="icon-btn" aria-label="Notifications" title="Notifications">
+          <i class="ph ph-bell"></i>
+        </button>
+
+
+        <div class="user-profile-menu" id="userProfileMenu">
+          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="User Menu" title="User Menu">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User">
+          </button>
+
+          <!-- =========================================================
+               DESIGN B: WITH USER HEADER, AVATAR & GREEN BADGE (ACTIVE)
+          ========================================================== -->
+          <div class="profile-dropdown design-b" id="profileDropdown">
+            <div class="dropdown-user-header">
+              <div class="dropdown-header-info">
+                <strong>Sophie Bennett</strong>
+                <span>sophie@ui.live</span>
+              </div>
+              <div class="dropdown-header-avatar">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Sophie">
+              </div>
+            </div>
+
+            <div class="dropdown-list">
+              <a href="#" class="dropdown-item active-item">
+                <i class="ph-fill ph-check-circle"></i>
+                <span>Profile</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-chat-circle-text"></i>
+                <span>Community</span>
+                <span class="badge-plus">+</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-credit-card"></i>
+                <span>Subscription</span>
+                <span class="badge-pro green">⚡ PRO</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-gear"></i>
+                <span>Settings</span>
+              </a>
+
+              <div class="dropdown-divider"></div>
+
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-info"></i>
+                <span>Help center</span>
+              </a>
+              <a href="login.html" class="dropdown-item">
+                <i class="ph ph-sign-out"></i>
+                <span>Sign out</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- =========================================================
+               DESIGN A: CLEAN LIST & PINK BADGE (COMMENTED OUT)
+               To use: Uncomment this block & comment out Design B above.
+          ========================================================== -->
+          <!--
+          <div class="profile-dropdown design-a" id="profileDropdown">
+            <div class="dropdown-list">
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-user"></i>
+                <span>Profile</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-chat-circle-text"></i>
+                <span>Community</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-credit-card"></i>
+                <span>Subscription</span>
+                <span class="badge-pro pink">⚡ PRO</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-gear"></i>
+                <span>Settings</span>
+              </a>
+
+              <div class="dropdown-divider"></div>
+
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-info"></i>
+                <span>Help center</span>
+              </a>
+              <a href="login.html" class="dropdown-item">
+                <i class="ph ph-sign-out"></i>
+                <span>Sign out</span>
+              </a>
+            </div>
+          </div>
+          -->
+
+        </div>
+      </div>
+    </div>
+  </header>
+    <!-- Collapsible Floated Bottom-Left Theme Switcher (Hidden on Mobile) -->
+  <div class="floating-theme-widget" id="floatingThemeWidget">
+    <div class="theme-options-collapse" id="themeOptionsCollapse">
+      <button class="theme-pill-btn" data-mode="light" aria-label="Light Mode" title="Light Mode">
+        <i class="ph ph-sun"></i>
+      </button>
+      <button class="theme-pill-btn" data-mode="dark" aria-label="Dark Mode" title="Dark Mode">
+        <i class="ph ph-moon"></i>
+      </button>
+      <button class="theme-pill-btn active" data-mode="system" aria-label="System Theme" title="System Theme">
+        <i class="ph ph-desktop"></i>
+      </button>
+    </div>
+
+    <button class="theme-trigger-btn" id="themeTriggerBtn" aria-label="Toggle Theme Menu" title="Choose Theme">
+      <i class="ph ph-desktop" id="activeThemeIcon"></i>
+    </button>
+  </div>
+
+
+  <!-- Main Settings Layout -->
+  <main class="settings-layout">
+    
+    <!-- Mobile App Header (Only shows on mobile) -->
+    <div class="mobile-settings-header">
+      <h2>Edit Profile</h2>
+    </div>
+
+    <!-- Sidebar Settings Navigation -->
+    <aside class="settings-sidebar">
+      <nav class="settings-nav">
+        <a href="settings" class="settings-nav-item active">
+          <i class="ph ph-user"></i>
+          <span>Profile</span>
+        </a>
+        <a href="security" class="settings-nav-item">
+          <i class="ph ph-lock-key"></i>
+          <span>Security</span>
+        </a>
+        <a href="#" class="settings-nav-item">
+          <i class="ph ph-globe"></i>
+          <span>Social profile</span>
+        </a>
+        <a href="#" class="settings-nav-item">
+          <i class="ph ph-envelope-simple"></i>
+          <span>Notifications</span>
+        </a>
+        <a href="#" class="settings-nav-item">
+          <i class="ph ph-user-minus"></i>
+          <span>Delete account</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Right Content Area -->
+    <section class="settings-content">
+      <h1 class="desktop-settings-title">Account settings</h1>
+
+      <!-- Section 1: Profile (Becomes a native card on mobile) -->
+      <div class="settings-section">
+        <h2 class="section-heading">Profile Details</h2>
+        
+        <div class="avatar-upload-row">
+          <div class="avatar-upload-circle" title="Upload new avatar">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=288&q=80" alt="User Avatar">
+            <div class="avatar-overlay"><i class="ph-fill ph-camera"></i></div>
+          </div>
+          <p class="avatar-upload-desc">
+            Update your avatar by clicking the image 288x288 px size recommended in PNG or JPG format only.
+          </p>
+        </div>
+
+        <form class="settings-form">
+          <div class="settings-input-group">
+            <label for="display-name">Display name</label>
+            <input type="text" id="display-name" value="Author Name">
+          </div>
+
+          <div class="settings-input-group">
+            <label for="slogan">Slogan (Bio)</label>
+            <input type="text" id="slogan" placeholder="i.e. Daily curated premium assets for startups and creators.">
+          </div>
+
+          <!-- Responsive 2-column row (Stacks on mobile automatically) -->
+          <div class="settings-form-row">
+            <div class="settings-input-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="designer@example.com">
+            </div>
+
+            <div class="settings-input-group">
+              <label for="location">Location</label>
+              <select id="location">
+                <option value="" disabled selected>Select location</option>
+                <option value="eg">Egypt</option>
+                <option value="us">United States</option>
+                <option value="uk">United Kingdom</option>
+                <option value="ae">United Arab Emirates</option>
+              </select>
+              <i class="ph ph-caret-down select-arrow"></i>
+            </div>
+          </div>
+          
+          <button type="button" class="btn-mobile-save">Save Profile</button>
+        </form>
+      </div>
+
+      <!-- Section 2: Security -->
+      <!-- <div class="settings-section">
+        <h2 class="section-heading">Security</h2>
+        
+        <form class="settings-form">
+          <div class="settings-input-group">
+            <label for="current-password">Current password</label>
+            <input type="password" id="current-password" placeholder="••••••••">
+          </div>
+
+          <div class="settings-input-group">
+            <label for="new-password">New password</label>
+            <input type="password" id="new-password" placeholder="••••••••">
+          </div>
+
+          <div class="settings-input-group">
+            <label for="confirm-password">Confirm new password</label>
+            <input type="password" id="confirm-password" placeholder="••••••••">
+          </div>
+          
+          <button type="button" class="btn-mobile-save">Update Password</button>
+        </form>
+      </div> -->
+
+    </section>
+  </main>
+
+  <!-- FLOATING BOTTOM BAR -->
+  <div class="mobile-floating-container" id="mobileFloatingContainer">
+    <nav class="mobile-nav-pill">
+      <a href="index.html" class="mobile-nav-item" aria-label="Home"><i class="ph ph-house"></i></a>
+      <a href="#" class="mobile-nav-item" aria-label="Search"><i class="ph ph-magnifying-glass"></i></a>
+      <a href="#" class="mobile-nav-item" aria-label="Notifications">
+        <i class="ph ph-bell"></i>
+        <span class="notif-dot"></span>
+      </a>
+      <a href="settings.html" class="mobile-nav-item active" aria-label="Profile"><i class="ph-fill ph-user"></i></a>
+      <button class="mobile-nav-item menu-trigger-btn" id="openBottomSheetBtn" aria-label="Menu" title="Menu">
+        <i class="ph ph-squares-four"></i>
+      </button>
+    </nav>
+    <button class="floating-plus-btn" id="floatingPlusBtn" aria-label="Create Post" title="Create">
+      <i class="ph ph-plus"></i>
+    </button>
+  </div>
+
+  <!-- MODERN DRAGGABLE BOTTOM SHEET -->
+  <div class="bottom-sheet-overlay" id="bottomSheetOverlay">
+    <div class="bottom-sheet" id="bottomSheet">
+      <div class="bottom-sheet-header" id="bottomSheetHeader">
+        <div class="drag-handle"></div>
+        <div class="sheet-title-row">
+          <h3>Navigation Menu</h3>
+          <button class="close-sheet-btn" id="closeBottomSheetBtn" aria-label="Close Menu">
+            <i class="ph ph-x"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="bottom-sheet-content">
+        <h4 class="sheet-section-title">Main Discovery</h4>
+        <div class="wide-nav-grid">
+          <a href="index.html" class="nav-card-module">
+            <div class="module-icon"><i class="ph-fill ph-house"></i></div>
+            <div class="module-text">
+              <h4>Home Feed</h4>
+              <p>Explore curated UI kits, mockups, and 3D assets</p>
+            </div>
+            <i class="ph ph-arrow-right module-arrow"></i>
+          </a>
+        </div>
+
+        <h4 class="sheet-section-title">Account & Preferences</h4>
+        <div class="clean-list-group">
+          <a href="login.html" class="clean-list-item">
+            <i class="ph ph-sign-in"></i>
+            <span>Sign In to Account</span>
+            <i class="ph ph-caret-right push-arrow"></i>
+          </a>
+          <a href="settings.html" class="clean-list-item">
+            <i class="ph ph-gear"></i>
+            <span>System Settings</span>
+            <i class="ph ph-caret-right push-arrow"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

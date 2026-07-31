@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dark Avatar Studio Pro</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icon Libraries -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* =========================================
+           CSS VARIABLES & RESET
+           ========================================= */
+        :root {
+            --bg-main: #000000;
+            --bg-card: #1C1C1E;
+            --bg-card-hover: #2C2C2E;
+            --text-main: #FFFFFF;
+            --text-sub: #8A8A8E;
+            --border: #38383A;
+            --accent-blue: #0A84FF;
+            --accent-blue-hover: #0070DF;
+            --accent-green: #30D158;
+            --font-main: 'Inter', -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            overscroll-behavior-y: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Scrollbar styling */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        
+        button { font-family: inherit; border: none; outline: none; background: none; cursor: pointer; }
+        input { font-family: inherit; }
+
+        /* =========================================
+           LAYOUT ARCHITECTURE
+           ========================================= */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+
+        .hero-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 0;
+        }
+
+        .editor-pane {
+            background-color: var(--bg-card);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        @media (min-width: 1024px) {
+            .app-container { flex-direction: row; }
+            .hero-pane, .editor-pane { width: 50%; height: 100%; }
+            .hero-pane { border-right: 1px solid var(--border); }
+        }
+
+        /* =========================================
+           HERO SECTION (LEFT/TOP)
+           ========================================= */
+        .header-bar {
+            padding: 40px 24px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .header-title { font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.8); display: none; }
+        @media (min-width: 1024px) { .header-title { display: block; } }
+
+        .export-actions { display: flex; gap: 12px; margin-left: auto; }
+        
+        .btn-export {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 10px;
+            border-radius: 50%;
+            color: var(--text-main);
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.1s, background 0.2s;
+        }
+        .btn-export:active { transform: scale(0.95); }
+        .btn-export.primary { background-color: var(--accent-blue); border: none; box-shadow: 0 4px 12px rgba(10, 132, 255, 0.2); }
+        .btn-export.primary:hover { background-color: var(--accent-blue-hover); }
+
+        .hero-center {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            margin-top: 48px;
+        }
+        @media (min-width: 1024px) { .hero-center { margin-top: 0; } }
+
+        .avatar-container-wrapper { position: relative; }
+        .avatar-container {
+            width: 256px; height: 256px;
+            border-radius: 50%;
+            background-color: #000;
+            border: 4px solid var(--bg-card);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .avatar-container.pulse { transform: scale(0.9); }
+        .avatar-container svg { width: 100%; height: 100%; transition: all 0.3s ease; }
+        @media (min-width: 1024px) { .avatar-container { width: 320px; height: 320px; } }
+
+        .btn-randomize {
+            position: absolute;
+            bottom: -8px; right: -8px;
+            width: 56px; height: 56px;
+            background-color: var(--bg-card);
+            border: 3px solid #000;
+            border-radius: 50%;
+            color: var(--accent-blue);
+            font-size: 24px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            transition: transform 0.2s, color 0.2s;
+        }
+        .btn-randomize:active { transform: scale(0.9); }
+        .btn-randomize:hover { color: var(--text-main); }
+
+        .identity-input-group {
+            margin-top: 48px;
+            width: 100%; max-width: 320px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .input-seed {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-main);
+            font-size: 30px; font-weight: 700;
+            text-align: center;
+            padding-bottom: 8px;
+            transition: border-color 0.2s;
+        }
+        .input-seed:focus { border-color: var(--accent-blue); outline: none; }
+        .input-hint { font-size: 13px; color: var(--text-sub); margin-top: 12px; text-align: center; }
+
+        .btn-open-editor {
+            margin-top: 32px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 14px 32px;
+            border-radius: 30px;
+            font-size: 15px; font-weight: 600;
+            display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: background 0.2s;
+        }
+        .btn-open-editor:active { background-color: var(--bg-card-hover); }
+        @media (min-width: 1024px) { .btn-open-editor { display: none; } }
+
+
+        /* =========================================
+           EDITOR SECTION (RIGHT/BOTTOM SHEET)
+           ========================================= */
+        .overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 40;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .overlay.open { opacity: 1; pointer-events: auto; }
+
+        @media (max-width: 1023px) {
+            .editor-pane {
+                position: fixed; bottom: 0; left: 0; right: 0;
+                height: 85vh;
+                border-radius: 32px 32px 0 0;
+                z-index: 50;
+                transform: translateY(100%);
+                transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+                box-shadow: 0 -4px 40px rgba(0,0,0,0.9);
+            }
+            .editor-pane.open { transform: translateY(0%); }
+        }
+
+        .sheet-header {
+            display: flex; flex-direction: column; align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+            position: relative;
+        }
+        .drag-handle-area {
+            width: 100%; padding: 16px 0 8px;
+            display: flex; justify-content: center;
+            cursor: grab; touch-action: none;
+        }
+        .drag-bar { width: 48px; height: 6px; background-color: #48484A; border-radius: 4px; }
+        .btn-close {
+            position: absolute; right: 16px; top: 16px;
+            background: var(--bg-main); color: var(--text-sub);
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; transition: 0.2s;
+        }
+        .btn-close:active { transform: scale(0.9); }
+        @media (min-width: 1024px) {
+            .drag-handle-area, .btn-close { display: none; }
+            .sheet-header { padding: 32px 32px 16px; border-bottom: 1px solid var(--border); }
+        }
+
+        .tab-nav-container {
+            display: flex; gap: 8px; overflow-x: auto;
+            padding: 0 16px 12px; width: 100%;
+        }
+        .tab-nav-container::-webkit-scrollbar { display: none; }
+        @media (min-width: 1024px) { .tab-nav-container { justify-content: center; padding-bottom: 16px; } }
+
+        .tab-btn {
+            padding: 8px 16px; border-radius: 20px;
+            font-size: 15px; font-weight: 600; color: var(--text-sub);
+            white-space: nowrap; transition: 0.2s;
+        }
+        .tab-btn.active { background: rgba(10, 132, 255, 0.15); color: var(--accent-blue); }
+
+        .editor-content {
+            flex: 1; overflow-y: auto;
+            padding: 24px 24px 60px;
+            position: relative;
+        }
+        @media (min-width: 1024px) { .editor-content { padding: 24px 48px 60px; } }
+
+        .panel { display: none; animation: fadeIn 0.3s ease; }
+        .panel.active { display: flex; flex-direction: column; gap: 40px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* =========================================
+           COMPONENTS
+           ========================================= */
+        .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-sub); font-weight: 600; margin-bottom: 12px; }
+        
+        .segment-wrapper {
+            background-color: var(--bg-main); padding: 4px; border-radius: 12px;
+            display: flex; gap: 2px; border: 1px solid var(--border); overflow: hidden;
+        }
+        .segment-btn {
+            flex: 1; padding: 8px 6px; border-radius: 8px; font-size: 13px; font-weight: 500;
+            color: var(--text-sub); text-align: center; transition: 0.2s; white-space: nowrap;
+        }
+        .segment-btn.active { background-color: var(--border); color: var(--text-main); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+        .icon-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .icon-btn {
+            background-color: var(--bg-main); border: 1px solid var(--border); border-radius: 12px;
+            padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+            color: var(--text-sub); font-size: 12px; font-weight: 500; transition: 0.2s;
+        }
+        .icon-btn i { font-size: 20px; }
+        .icon-btn.active { background-color: var(--accent-blue); border-color: var(--accent-blue); color: var(--text-main); }
+        
+        /* Custom Shapes inside Icon buttons */
+        .shape-sq { width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 3px; }
+        .shape-circ { width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 50%; }
+        .shape-round { width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 6px; }
+        .shape-dia { width: 18px; height: 18px; border: 2px solid currentColor; transform: rotate(45deg) scale(0.8); }
+
+        .settings-card { background-color: var(--bg-main); padding: 20px; border-radius: 16px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 24px; }
+        
+        .slider-group { display: flex; flex-direction: column; }
+        .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .slider-label { font-size: 14px; font-weight: 500; color: var(--text-main); }
+        .slider-val { font-size: 13px; font-weight: 700; color: var(--accent-blue); }
+        
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; height: 24px; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: var(--border); border-radius: 3px; }
+        input[type=range]::-webkit-slider-thumb {
+            height: 24px; width: 24px; border-radius: 50%; background: var(--text-main);
+            cursor: pointer; -webkit-appearance: none; margin-top: -9px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4); transition: transform 0.1s;
+        }
+        input[type=range]:active::-webkit-slider-thumb { transform: scale(1.15); }
+
+        .palette-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; }
+        .palette-scroll::-webkit-scrollbar { display: none; }
+        .palette-btn {
+            width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0;
+            overflow: hidden; display: flex; transition: transform 0.2s;
+        }
+        .palette-btn:active { transform: scale(0.9); }
+        .palette-btn.active { border-color: var(--accent-blue); transform: scale(1.1); }
+        .palette-color { flex: 1; height: 100%; }
+
+        .card-list { background-color: var(--bg-main); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+        .card-list-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+        .card-list-item:last-child { border-bottom: none; }
+        .item-text-group { display: flex; flex-direction: column; }
+        .item-title { font-size: 16px; font-weight: 500; color: var(--text-main); }
+        .item-sub { font-size: 13px; color: var(--text-sub); margin-top: 2px; }
+
+        .toggle-checkbox { display: none; }
+        .toggle-label {
+            display: block; width: 51px; height: 31px; border-radius: 31px;
+            background: #39393D; transition: all 0.3s ease; position: relative; cursor: pointer;
+        }
+        .toggle-label::after {
+            content: ''; position: absolute; top: 2px; left: 2px;
+            width: 27px; height: 27px; background: #fff; border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: all 0.3s cubic-bezier(0.3, 1.5, 0.7, 1);
+        }
+        .toggle-checkbox:checked + .toggle-label { background: var(--accent-green); }
+        .toggle-checkbox:checked + .toggle-label::after { transform: translateX(20px); }
+
+        .color-pickers-row { display: flex; justify-content: space-around; padding: 24px; transition: opacity 0.3s; }
+        .color-picker-group { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .color-swatch-wrapper {
+            position: relative; width: 44px; height: 44px; border-radius: 50%;
+            border: 2px solid var(--border); overflow: hidden;
+        }
+        input[type="color"] {
+            -webkit-appearance: none; border: none; width: 200%; height: 200%;
+            position: absolute; top: -50%; left: -50%; cursor: pointer; padding: 0; background: transparent;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; }
+        .color-label { font-size: 13px; font-weight: 500; color: var(--text-sub); }
+
+    </style>
+</head>
+<body>
+
+    <!-- MOBILE OVERLAY -->
+    <div id="overlay" class="overlay" onclick="closeEditor()"></div>
+
+    <div class="app-container">
+        
+        <!-- ========================================== -->
+        <!-- LEFT PANE / HERO AREA                      -->
+        <!-- ========================================== -->
+        <div class="hero-pane">
+            <div class="header-bar">
+                <div class="header-title">Avatar Studio Pro</div>
+                <div class="export-actions">
+                    <button class="btn-export" onclick="download('svg')" title="Export SVG">
+                        <i class="ph ph-code"></i>
+                    </button>
+                    <button class="btn-export primary" onclick="download('png')" title="Export PNG">
+                        <i class="ph ph-download-simple"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="hero-center">
+                <div class="avatar-container-wrapper">
+                    <div class="avatar-container" id="main-avatar">
+                        <!-- SVG Output -->
+                    </div>
+                    <button class="btn-randomize" onclick="randomizeAll()" title="Randomize">
+                        <i class="fa-solid fa-dice"></i>
+                    </button>
+                </div>
+
+                <div class="identity-input-group">
+                    <input type="text" id="seed-input" class="input-seed" placeholder="Enter Name">
+                    <div class="input-hint">The text mathematically generates your pattern.</div>
+                </div>
+
+                <button class="btn-open-editor" onclick="openEditor()">
+                    <i class="ri-equalizer-line"></i> Edit Design
+                </button>
+            </div>
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- RIGHT PANE / BOTTOM SHEET EDITOR           -->
+        <!-- ========================================== -->
+        <div class="editor-pane" id="bottom-sheet">
+            
+            <div class="sheet-header">
+                <div class="drag-handle-area" id="drag-handle">
+                    <div class="drag-bar"></div>
+                </div>
+                <button class="btn-close" onclick="closeEditor()"><i class="ph ph-x"></i></button>
+                
+                <div class="tab-nav-container custom-scroll">
+                    <button class="tab-btn active" onclick="switchTab('shapes')">Style & Shapes</button>
+                    <button class="tab-nav-btn tab-btn" onclick="switchTab('layout')">Layout</button>
+                    <button class="tab-nav-btn tab-btn" onclick="switchTab('colors')">Colors</button>
+                </div>
+            </div>
+
+            <div class="editor-content custom-scroll">
+                
+                <!-- PANEL: SHAPES & THEME -->
+                <div id="panel-shapes" class="panel active">
+                    
+                    <div>
+                        <div class="section-title">Identity Source</div>
+                        <div class="segment-wrapper">
+                            <button class="segment-btn name-mode-btn active" data-mode="full">Use Full Name</button>
+                            <button class="segment-btn name-mode-btn" data-mode="short">Use Initials</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="section-title">Generation Theme</div>
+                        <div class="segment-wrapper">
+                            <button class="segment-btn style-btn active" data-val="geometric">Geometric</button>
+                            <button class="segment-btn style-btn" data-val="identicon">Identicon</button>
+                            <button class="segment-btn style-btn" data-val="invader">Invader</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="section-title">Base Element</div>
+                        <div class="icon-grid">
+                            <button class="icon-btn shape-btn active" data-val="square"><div class="shape-sq"></div>Square</button>
+                            <button class="icon-btn shape-btn" data-val="circle"><div class="shape-circ"></div>Circle</button>
+                            <button class="icon-btn shape-btn" data-val="rounded"><div class="shape-round"></div>Round</button>
+                            <button class="icon-btn shape-btn" data-val="diamond"><div class="shape-dia"></div>Diamond</button>
+                            <button class="icon-btn shape-btn" data-val="triangle"><i class="ph ph-triangle"></i>Triangle</button>
+                            <button class="icon-btn shape-btn" data-val="hexagon"><i class="ph ph-hexagon"></i>Hexagon</button>
+                            <button class="icon-btn shape-btn" data-val="cross"><i class="ph ph-plus"></i>Cross</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div>
+                            <div class="slider-label" style="margin-bottom:12px;">Element Style</div>
+                            <div class="segment-wrapper">
+                                <button class="segment-btn elem-style-btn active" data-val="solid">Solid Fill</button>
+                                <button class="segment-btn elem-style-btn" data-val="outline">Outline</button>
+                                <button class="segment-btn elem-style-btn" data-val="both">Both</button>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="slider-label" style="margin-bottom:12px;">Element Scaling</div>
+                            <div class="segment-wrapper">
+                                <button class="segment-btn scale-btn active" data-val="uniform">Uniform</button>
+                                <button class="segment-btn scale-btn" data-val="dynamic">Scattered</button>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="slider-label" style="margin-bottom:12px;">Element Rotation</div>
+                            <div class="segment-wrapper">
+                                <button class="segment-btn rot-btn active" data-val="none">0°</button>
+                                <button class="segment-btn rot-btn" data-val="angular">45° Snap</button>
+                                <button class="segment-btn rot-btn" data-val="chaotic">Chaotic</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL: LAYOUT -->
+                <div id="panel-layout" class="panel">
+                    
+                    <div>
+                        <div class="section-title">Symmetry Logic</div>
+                        <div class="segment-wrapper">
+                            <button class="segment-btn sym-btn active" data-val="horizontal">Horiz</button>
+                            <button class="segment-btn sym-btn" data-val="vertical">Vert</button>
+                            <button class="segment-btn sym-btn" data-val="quad">Quad</button>
+                            <button class="segment-btn sym-btn" data-val="none">None</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <span class="slider-label">Grid Complexity</span>
+                                <span class="slider-val" id="val-grid">5x5</span>
+                            </div>
+                            <input type="range" id="grid-size" min="3" max="15" value="5">
+                        </div>
+
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <span class="slider-label">Shape Density</span>
+                                <span class="slider-val" id="val-density">55%</span>
+                            </div>
+                            <input type="range" id="density" min="10" max="90" value="55">
+                        </div>
+
+                        <div class="slider-group">
+                            <div class="slider-header">
+                                <span class="slider-label">Element Spacing</span>
+                                <span class="slider-val" id="val-spacing">5%</span>
+                            </div>
+                            <input type="range" id="spacing" min="0" max="80" value="5">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL: COLORS -->
+                <div id="panel-colors" class="panel">
+                    
+                    <div>
+                        <div class="section-title" style="display: flex; justify-content: space-between;">
+                            Quick Palettes
+                            <button style="color:var(--accent-blue); font-weight: 500; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="randomizeColors()">
+                                <i class="ri-refresh-line"></i> Shuffle
+                            </button>
+                        </div>
+                        <div class="palette-scroll custom-scroll">
+                            <div class="palette-btn active" onclick="setPalette('#050515', '#F538FF', '#00FFFF', this)">
+                                <div class="palette-color" style="background:#050515;"></div><div class="palette-color" style="background:#F538FF;"></div><div class="palette-color" style="background:#00FFFF;"></div>
+                            </div>
+                            <div class="palette-btn" onclick="setPalette('#0A1910', '#00FF88', '#00E1FF', this)">
+                                <div class="palette-color" style="background:#0A1910;"></div><div class="palette-color" style="background:#00FF88;"></div><div class="palette-color" style="background:#00E1FF;"></div>
+                            </div>
+                            <div class="palette-btn" onclick="setPalette('#1A0B10', '#FF3366', '#FF9933', this)">
+                                <div class="palette-color" style="background:#1A0B10;"></div><div class="palette-color" style="background:#FF3366;"></div><div class="palette-color" style="background:#FF9933;"></div>
+                            </div>
+                            <div class="palette-btn" onclick="setPalette('#111111', '#FFD700', '#FFFFFF', this)">
+                                <div class="palette-color" style="background:#111111;"></div><div class="palette-color" style="background:#FFD700;"></div><div class="palette-color" style="background:#FFFFFF;"></div>
+                            </div>
+                            <div class="palette-btn" onclick="setPalette('#0F172A', '#0A84FF', '#5E5CE6', this)">
+                                <div class="palette-color" style="background:#0F172A;"></div><div class="palette-color" style="background:#0A84FF;"></div><div class="palette-color" style="background:#5E5CE6;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-list">
+                        <div class="card-list-item">
+                            <div class="item-text-group">
+                                <span class="item-title">Smart Auto-Colors</span>
+                                <span class="item-sub">Generate palette from text</span>
+                            </div>
+                            <input type="checkbox" id="toggle-smart-color" class="toggle-checkbox" checked>
+                            <label for="toggle-smart-color" class="toggle-label"></label>
+                        </div>
+
+                        <div class="color-pickers-row" id="manual-colors">
+                            <div class="color-picker-group">
+                                <div class="color-swatch-wrapper"><input type="color" id="color-bg" value="#051224"></div>
+                                <span class="color-label">Base</span>
+                            </div>
+                            <div class="color-picker-group">
+                                <div class="color-swatch-wrapper"><input type="color" id="color-fg1" value="#0A84FF"></div>
+                                <span class="color-label">Primary</span>
+                            </div>
+                            <div class="color-picker-group" id="color-fg2-container">
+                                <div class="color-swatch-wrapper"><input type="color" id="color-fg2" value="#30D158"></div>
+                                <span class="color-label">Accent</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="section-title">Background Pattern</div>
+                        <div class="segment-wrapper">
+                            <button class="segment-btn bg-pattern-btn active" data-val="none">Solid</button>
+                            <button class="segment-btn bg-pattern-btn" data-val="dots">Dots</button>
+                            <button class="segment-btn bg-pattern-btn" data-val="grid">Grid</button>
+                        </div>
+                    </div>
+
+                    <div class="card-list">
+                        <div class="card-list-item">
+                            <div class="item-text-group">
+                                <span class="item-title">Dual Color Output</span>
+                                <span class="item-sub">Use primary and accent</span>
+                            </div>
+                            <input type="checkbox" id="toggle-dual" class="toggle-checkbox" checked>
+                            <label for="toggle-dual" class="toggle-label"></label>
+                        </div>
+                        <div class="card-list-item">
+                            <div class="item-text-group">
+                                <span class="item-title">Transparent Export</span>
+                                <span class="item-sub">Removes BG on save</span>
+                            </div>
+                            <input type="checkbox" id="toggle-trans" class="toggle-checkbox">
+                            <label for="toggle-trans" class="toggle-label"></label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // ---------------------------------------------------
+        // UI TAB LOGIC
+        // ---------------------------------------------------
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById('panel-' + tabId).classList.add('active');
+        }
+
+        // ---------------------------------------------------
+        // MOBILE BOTTOM SHEET DRAG LOGIC (Isolated)
+        // ---------------------------------------------------
+        const bottomSheet = document.getElementById('bottom-sheet');
+        const overlay = document.getElementById('overlay');
+        const dragHandle = document.getElementById('drag-handle');
+        
+        let startY = 0, currentY = 0, isDragging = false, sheetHeight = 0;
+
+        function openEditor() {
+            if(window.innerWidth >= 1024) return;
+            bottomSheet.classList.add('open');
+            overlay.classList.add('open');
+            bottomSheet.style.transform = ''; 
+        }
+
+        function closeEditor() {
+            if(window.innerWidth >= 1024) return;
+            bottomSheet.classList.remove('open');
+            overlay.classList.remove('open');
+            bottomSheet.style.transform = ''; 
+        }
+
+        dragHandle.addEventListener('touchstart', (e) => {
+            if(window.innerWidth >= 1024) return;
+            isDragging = true; startY = e.touches[0].clientY;
+            sheetHeight = bottomSheet.getBoundingClientRect().height;
+            bottomSheet.style.transition = 'none'; 
+        }, {passive: true});
+
+        dragHandle.addEventListener('touchmove', (e) => {
+            if (!isDragging || window.innerWidth >= 1024) return;
+            currentY = e.touches[0].clientY;
+            const dy = currentY - startY;
+            if (dy > 0) bottomSheet.style.transform = `translateY(${dy}px)`;
+        }, {passive: true});
+
+        dragHandle.addEventListener('touchend', (e) => {
+            if (!isDragging || window.innerWidth >= 1024) return;
+            isDragging = false;
+            bottomSheet.style.transition = ''; 
+            const dy = currentY - startY;
+            if (dy > sheetHeight * 0.25) closeEditor();
+            else bottomSheet.style.transform = 'translateY(0%)';
+        });
+
+        // ---------------------------------------------------
+        // GENERATOR STATE & LOGIC
+        // ---------------------------------------------------
+        const state = {
+            fullName: '',
+            nameMode: 'full',
+            smartColor: true,
+            style: 'geometric', 
+            gridSize: 5,
+            spacing: 5,
+            symmetry: 'horizontal',
+            shape: 'rounded',
+            elemStyle: 'solid', 
+            scaleVar: 'uniform', 
+            rotation: 'none',    
+            bgPattern: 'none',   
+            density: 65,
+            bgColor: '#0F172A',
+            fgColor1: '#0A84FF',
+            fgColor2: '#5E5CE6',
+            useDualColor: true,
+            isTransparentBg: false
+        };
+
+        const mainAvatar = document.getElementById('main-avatar');
+        const seedInput = document.getElementById('seed-input');
+        const manualColors = document.getElementById('manual-colors');
+
+        function getInitials(name) {
+            const parts = name.trim().split(/\s+/);
+            if(parts.length === 0 || parts[0] === "") return "SP";
+            if(parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+            return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+        }
+
+        function getActiveSeed() {
+            let seedStr = state.fullName.trim() || 'Studio Pro';
+            if(state.nameMode === 'short') seedStr = getInitials(seedStr);
+            return seedStr;
+        }
+
+        function getSeededRandom(seedString) {
+            let h = 2166136261 >>> 0;
+            for (let i = 0; i < seedString.length; i++) h = Math.imul(h ^ seedString.charCodeAt(i), 16777619);
+            return function () { h += h << 13; h ^= h >>> 17; h += h << 5; return (h >>> 0) / 4294967296; };
+        }
+
+        function generateSmartColors(seedString) {
+            let hash = 0;
+            for (let i = 0; i < seedString.length; i++) hash = seedString.charCodeAt(i) + ((hash << 5) - hash);
+            const h1 = Math.abs(hash) % 360;
+            const h2 = (h1 + 60) % 360;
+            const hslToHex = (h, s, l) => {
+                l /= 100; const a = s * Math.min(l, 1 - l) / 100;
+                const f = n => { const k = (n + h / 30) % 12; const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1); return Math.round(255 * color).toString(16).padStart(2, '0'); };
+                return `#${f(0)}${f(8)}${f(4)}`;
+            };
+            return { bg: hslToHex(h1, 40, 10), fg1: hslToHex(h1, 90, 60), fg2: hslToHex(h2, 90, 60) };
+        }
+
+        window.setPalette = (bg, fg1, fg2, btn) => {
+            state.smartColor = false;
+            state.bgColor = bg; state.fgColor1 = fg1; state.fgColor2 = fg2;
+            document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            render();
+        }
+
+        function updateUI() {
+            if(document.activeElement !== seedInput) seedInput.value = state.fullName;
+            
+            document.getElementById('grid-size').value = state.gridSize;
+            document.getElementById('val-grid').innerText = `${state.gridSize}x${state.gridSize}`;
+            document.getElementById('spacing').value = state.spacing;
+            document.getElementById('val-spacing').innerText = `${state.spacing}%`;
+            document.getElementById('density').value = state.density;
+            document.getElementById('val-density').innerText = `${state.density}%`;
+
+            document.getElementById('toggle-smart-color').checked = state.smartColor;
+            manualColors.style.opacity = state.smartColor ? '0.3' : '1';
+            manualColors.style.pointerEvents = state.smartColor ? 'none' : 'auto';
+
+            if(state.smartColor) {
+                const smart = generateSmartColors(getActiveSeed());
+                state.bgColor = smart.bg; state.fgColor1 = smart.fg1; state.fgColor2 = smart.fg2;
+                document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('active'));
+            }
+            
+            document.getElementById('color-bg').value = state.bgColor;
+            document.getElementById('color-fg1').value = state.fgColor1;
+            document.getElementById('color-fg2').value = state.fgColor2;
+            
+            document.getElementById('toggle-dual').checked = state.useDualColor;
+            document.getElementById('toggle-trans').checked = state.isTransparentBg;
+            document.getElementById('color-fg2-container').style.opacity = state.useDualColor ? '1' : '0.3';
+
+            // Buttons Active states
+            const toggleClass = (selector, val) => {
+                document.querySelectorAll(selector).forEach(b => {
+                    if (b.dataset.mode === val || b.dataset.val === val) b.classList.add('active');
+                    else b.classList.remove('active');
+                });
+            };
+
+            toggleClass('.name-mode-btn', state.nameMode);
+            toggleClass('.style-btn', state.style);
+            toggleClass('.sym-btn', state.symmetry);
+            toggleClass('.shape-btn', state.shape);
+            toggleClass('.elem-style-btn', state.elemStyle);
+            toggleClass('.scale-btn', state.scaleVar);
+            toggleClass('.rot-btn', state.rotation);
+            toggleClass('.bg-pattern-btn', state.bgPattern);
+        }
+
+        function generateGridData() {
+            const rand = getSeededRandom(getActiveSeed());
+            let uniqueCols = state.gridSize; let uniqueRows = state.gridSize;
+            if (state.symmetry === 'horizontal' || state.symmetry === 'quad') uniqueCols = Math.ceil(state.gridSize / 2);
+            if (state.symmetry === 'vertical' || state.symmetry === 'quad') uniqueRows = Math.ceil(state.gridSize / 2);
+
+            const uniqueValues = [];
+            for (let i = 0; i < uniqueCols * uniqueRows; i++) {
+                uniqueValues.push({ 
+                    filled: rand() < (state.density / 100), 
+                    colorToggle: rand() > 0.5,
+                    scaleVal: rand(),
+                    rotVal: rand()
+                });
+            }
+
+            const grid = [];
+            for (let r = 0; r < state.gridSize; r++) {
+                for (let c = 0; c < state.gridSize; c++) {
+                    let px = c; let py = r;
+                    if (state.symmetry === 'horizontal' || state.symmetry === 'quad') px = c < uniqueCols ? c : state.gridSize - 1 - c;
+                    if (state.symmetry === 'vertical' || state.symmetry === 'quad') py = r < uniqueRows ? r : state.gridSize - 1 - r;
+                    grid.push({ row: r, col: c, ...uniqueValues[py * uniqueCols + px] });
+                }
+            }
+            return grid;
+        }
+
+        function renderShape(cell, baseSize, offset, color) {
+            let w = baseSize;
+            if(state.scaleVar === 'dynamic') w = baseSize * (0.4 + (cell.scaleVal * 0.6));
+            
+            const diff = (baseSize - w) / 2;
+            const x = cell.col * (100 / state.gridSize) + offset + diff; 
+            const y = cell.row * (100 / state.gridSize) + offset + diff;
+            const cx = x + w / 2; const cy = y + w / 2;
+            
+            let rotStr = '';
+            if(state.rotation === 'angular') {
+                const angles = [0, 45, 90, 135, 180, 225, 270, 315];
+                rotStr = `transform="rotate(${angles[Math.floor(cell.rotVal * angles.length)]}, ${cx}, ${cy})"`;
+            } else if (state.rotation === 'chaotic') {
+                rotStr = `transform="rotate(${Math.floor(cell.rotVal * 360)}, ${cx}, ${cy})"`;
+            }
+
+            const strokeW = Math.max(1, w * 0.15);
+            let styleStr = '';
+            if(state.elemStyle === 'solid') styleStr = `fill="${color}"`;
+            else if(state.elemStyle === 'outline') styleStr = `fill="none" stroke="${color}" stroke-width="${strokeW}"`;
+            else if(state.elemStyle === 'both') styleStr = `fill="${color}" fill-opacity="0.3" stroke="${color}" stroke-width="${strokeW}"`;
+
+            let currentShape = state.shape;
+            if(state.style === 'identicon' || state.style === 'invader') currentShape = 'square';
+
+            switch (currentShape) {
+                case 'circle': return `<circle cx="${cx}" cy="${cy}" r="${w / 2}" ${styleStr} ${rotStr}/>`;
+                case 'rounded': return `<rect x="${x}" y="${y}" width="${w}" height="${w}" rx="${w / 3}" ${styleStr} ${rotStr}/>`;
+                case 'diamond': return `<polygon points="${cx},${y} ${x+w},${cy} ${cx},${y+w} ${x},${cy}" ${styleStr} ${rotStr}/>`;
+                case 'triangle': return ((cell.row + cell.col) % 2 === 0) ? `<polygon points="${cx},${y} ${x+w},${y+w} ${x},${y+w}" ${styleStr} ${rotStr}/>` : `<polygon points="${x},${y} ${x+w},${y} ${cx},${y+w}" ${styleStr} ${rotStr}/>`;
+                case 'hexagon': const hq = w/4; return `<polygon points="${cx},${y} ${x+w},${y+hq} ${x+w},${y+w-hq} ${cx},${y+w} ${x},${y+w-hq} ${x},${y+hq}" ${styleStr} ${rotStr}/>`;
+                case 'cross': const t = w/3; return `<g ${rotStr}><rect x="${cx - t/2}" y="${y}" width="${t}" height="${w}" ${styleStr} /><rect x="${x}" y="${cy - t/2}" width="${w}" height="${t}" ${styleStr} /></g>`;
+                case 'square': default:
+                    if(state.style !== 'geometric') {
+                        const blockW = 100 / state.gridSize; return `<rect x="${cell.col * blockW - 0.5}" y="${cell.row * blockW - 0.5}" width="${blockW + 1}" height="${blockW + 1}" ${styleStr} />`;
+                    }
+                    return `<rect x="${x}" y="${y}" width="${w}" height="${w}" ${styleStr} ${rotStr}/>`;
+            }
+        }
+
+        function render() {
+            if(state.style === 'invader') { state.symmetry = 'horizontal'; state.shape = 'square'; state.spacing = 0; state.rotation = 'none'; state.scaleVar = 'uniform'; }
+            if(state.style === 'identicon') { state.shape = 'square'; state.spacing = 0; state.rotation = 'none'; state.scaleVar = 'uniform'; if(state.symmetry !== 'horizontal' && state.symmetry !== 'none') state.symmetry = 'horizontal'; }
+
+            updateUI();
+
+            const gridData = generateGridData();
+            const cellSize = 100 / state.gridSize;
+            const gap = state.style === 'geometric' ? cellSize * (state.spacing / 100) : 0;
+            const actualSize = cellSize - gap;
+            const offset = gap / 2;
+
+            let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">`;
+            
+            svgContent += `<defs>`;
+            if(state.bgPattern === 'dots') svgContent += `<pattern id="bg-pat" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="${state.fgColor1}" opacity="0.2"/></pattern>`;
+            if(state.bgPattern === 'grid') svgContent += `<pattern id="bg-pat" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="${state.fgColor1}" stroke-width="0.5" opacity="0.3"/></pattern>`;
+            svgContent += `</defs>`;
+
+            if (!state.isTransparentBg) {
+                svgContent += `<rect width="100" height="100" fill="${state.bgColor}" />`;
+                if(state.bgPattern !== 'none') svgContent += `<rect width="100" height="100" fill="url(#bg-pat)" />`;
+            }
+
+            gridData.forEach(cell => {
+                if (cell.filled) {
+                    const color = state.useDualColor && cell.colorToggle ? state.fgColor2 : state.fgColor1;
+                    svgContent += renderShape(cell, actualSize, offset, color);
+                }
+            });
+            svgContent += `</svg>`;
+            
+            mainAvatar.innerHTML = svgContent;
+            mainAvatar.style.backgroundColor = state.isTransparentBg ? 'transparent' : state.bgColor;
+        }
+
+        // Listeners
+        seedInput.addEventListener('input', e => { state.fullName = e.target.value; render(); });
+        document.querySelectorAll('.name-mode-btn').forEach(btn => btn.addEventListener('click', e => { state.nameMode = e.target.dataset.mode; render(); }));
+        
+        document.getElementById('grid-size').addEventListener('input', e => { state.gridSize = parseInt(e.target.value); render(); });
+        document.getElementById('spacing').addEventListener('input', e => { state.spacing = parseInt(e.target.value); render(); });
+        document.getElementById('density').addEventListener('input', e => { state.density = parseInt(e.target.value); render(); });
+        
+        document.getElementById('toggle-smart-color').addEventListener('change', e => { state.smartColor = e.target.checked; render(); });
+        document.getElementById('color-bg').addEventListener('input', e => { state.bgColor = e.target.value; state.smartColor = false; render(); });
+        document.getElementById('color-fg1').addEventListener('input', e => { state.fgColor1 = e.target.value; state.smartColor = false; render(); });
+        document.getElementById('color-fg2').addEventListener('input', e => { state.fgColor2 = e.target.value; state.smartColor = false; render(); });
+        document.getElementById('toggle-dual').addEventListener('change', e => { state.useDualColor = e.target.checked; render(); });
+        document.getElementById('toggle-trans').addEventListener('change', e => { state.isTransparentBg = e.target.checked; render(); });
+
+        document.querySelectorAll('.style-btn').forEach(btn => btn.addEventListener('click', e => { state.style = e.target.dataset.val; render(); }));
+        document.querySelectorAll('.sym-btn').forEach(btn => btn.addEventListener('click', e => { state.symmetry = e.target.dataset.val; render(); }));
+        document.querySelectorAll('.shape-btn').forEach(btn => btn.addEventListener('click', e => { state.shape = e.target.dataset.val; if(state.style !== 'geometric') state.style = 'geometric'; render(); }));
+        document.querySelectorAll('.elem-style-btn').forEach(btn => btn.addEventListener('click', e => { state.elemStyle = e.target.dataset.val; render(); }));
+        document.querySelectorAll('.scale-btn').forEach(btn => btn.addEventListener('click', e => { state.scaleVar = e.target.dataset.val; render(); }));
+        document.querySelectorAll('.rot-btn').forEach(btn => btn.addEventListener('click', e => { state.rotation = e.target.dataset.val; render(); }));
+        document.querySelectorAll('.bg-pattern-btn').forEach(btn => btn.addEventListener('click', e => { state.bgPattern = e.target.dataset.val; render(); }));
+
+        window.randomizeColors = () => {
+            const hex = () => '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+            state.smartColor = false;
+            state.bgColor = '#000000'; // Keep BG dark usually
+            state.fgColor1 = hex();
+            state.fgColor2 = hex();
+            document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('active'));
+            render();
+        }
+
+        window.randomizeAll = () => {
+            const first = ['Creative', 'Magic', 'Alpha', 'Dark', 'Neon', 'Cyber', 'Void'];
+            const last = ['User', 'Agent', 'Bot', 'Pro', 'Max', 'Zero'];
+            state.fullName = `${first[Math.floor(Math.random()*first.length)]} ${last[Math.floor(Math.random()*last.length)]}`;
+            state.smartColor = true;
+            document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('active'));
+            render();
+            mainAvatar.classList.add('pulse'); setTimeout(() => mainAvatar.classList.remove('pulse'), 200);
+        };
+
+        window.download = (type) => {
+            const svgElement = mainAvatar.querySelector('svg');
+            if (!svgElement) return;
+            const fileName = `${(getActiveSeed()).replace(/[^a-z0-9]/gi, '_').toLowerCase()}`;
+
+            if (type === 'svg') {
+                const source = new XMLSerializer().serializeToString(svgElement);
+                const url = URL.createObjectURL(new Blob([source], { type: 'image/svg+xml;charset=utf-8' }));
+                const link = document.createElement('a'); link.href = url; link.download = `${fileName}.svg`;
+                document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url);
+            } else if (type === 'png') {
+                const clone = svgElement.cloneNode(true);
+                clone.setAttribute('width', '1024'); clone.setAttribute('height', '1024');
+                const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: 'image/svg+xml;charset=utf-8' }));
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 1024;
+                    const ctx = canvas.getContext('2d');
+                    if (!state.isTransparentBg) { ctx.fillStyle = state.bgColor; ctx.fillRect(0, 0, 1024, 1024); }
+                    ctx.drawImage(img, 0, 0, 1024, 1024); URL.revokeObjectURL(url);
+                    const link = document.createElement('a'); link.href = canvas.toDataURL('image/png'); link.download = `${fileName}.png`;
+                    link.click();
+                };
+                img.src = url;
+            }
+        };
+
+        render();
+    </script>
+</body>
+</html>
+
+

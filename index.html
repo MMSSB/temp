@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>u.live - Global Feed</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Floated Transparent Navbar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo floated-logo" style="text-decoration:none;">
+        <span class="logo-icon"><i class="ph-fill ph-circle"></i></span>
+        <span class="logo-text">u.live</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="active">Home Feed</a>
+        <a href="#">Explore</a>
+        <a href="#">Components</a>
+        <a href="#">Mockups</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="icon-btn search-btn" aria-label="Search">
+          <i class="ph ph-magnifying-glass"></i>
+        </button>
+
+        <button class="icon-btn" aria-label="Bookmarks" title="Bookmarks">
+          <i class="ph ph-bookmark-simple"></i>
+        </button>
+        <button class="icon-btn" aria-label="Notifications" title="Notifications">
+          <i class="ph ph-bell"></i>
+          <span class="notif-dot" style="position:absolute; top:8px; right:8px; width:6px; height:6px; background:#ef4444; border-radius:50%;"></span>
+        </button>
+
+        <div class="user-profile-menu" id="userProfileMenu">
+          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="User Menu">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User">
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3-COLUMN DASHBOARD LAYOUT -->
+  <main class="main-container feed-layout">
+    
+    <!-- ==========================================
+         LEFT SIDEBAR: Independent Scrollable
+    =========================================== -->
+    <aside class="dashboard-sidebar scrollable-sidebar animate-fade-up" style="--delay: 0s;">
+      
+      <!-- Mini Profile -->
+      <div class="mini-profile-card">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="MMS" class="mini-avatar">
+        <div class="mini-info">
+          <h4>MMS <i class="ph-fill ph-check-circle verified-badge"></i></h4>
+          <p>@mms_builder</p>
+        </div>
+        <div class="mini-stats">
+          <div><strong>1.2k</strong><span>Followers</span></div>
+          <div><strong>34</strong><span>Posts</span></div>
+        </div>
+        <a href="profile.html" class="btn-outline-full">View My Profile</a>
+      </div>
+
+      <!-- Quick Nav -->
+      <nav class="sidebar-menu">
+        <a href="index.html" class="active"><i class="ph-fill ph-house"></i> Home Feed</a>
+        <a href="#"><i class="ph ph-compass"></i> Explore</a>
+        <a href="#"><i class="ph ph-users"></i> Community</a>
+        <a href="#"><i class="ph ph-bookmark-simple"></i> Saved Assets</a>
+        <a href="appearance.html"><i class="ph ph-palette"></i> Appearance</a>
+        <a href="settings.html"><i class="ph ph-gear"></i> Settings</a>
+      </nav>
+
+      <!-- Trending Tags -->
+      <div class="tags-section" style="margin-top: 24px;">
+        <span class="tags-label">Trending Topics</span>
+        <div class="tags-grid">
+          <span class="tag">#Dashboard</span>
+          <span class="tag">#MobileUI</span>
+          <span class="tag">#DarkTheme</span>
+          <span class="tag">#Glassmorphism</span>
+          <span class="tag">#3DAssets</span>
+          <span class="tag">#React</span>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <p>© 2026 u.live. All rights reserved.</p>
+        <p>Privacy • Terms • Cookies</p>
+      </div>
+    </aside>
+
+    <!-- ==========================================
+         MIDDLE COLUMN: Global Posts Feed
+    =========================================== -->
+    <section class="content-area">
+
+
+
+
+      <!-- MOBILE ONLY: Sponsored Ad -->
+      <div class="mobile-ad-wrapper animate-fade-up">
+        <div class="widget-box">
+          <div class="widget-header-row">
+            <h3 class="widget-title">Sponsored</h3>
+            <i class="ph ph-info"></i>
+          </div>
+          <a href="#" class="ad-card">
+            <div class="ad-image-container">
+              <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=80" alt="Ad">
+              <span class="ad-badge">Ad</span>
+            </div>
+            <div class="ad-content">
+              <h4>DataScience Pro Bootcamp</h4>
+              <p>Master python and advance your career today.</p>
+              <div class="ad-meta">
+                <span>datascience.io</span>
+                <button class="btn-ad-action">Learn More</button>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+
+
+
+      <!-- MOBILE ONLY: Horizontal Suggestions (Instagram/Threads Style) -->
+      <div class="mobile-suggestions-wrapper animate-fade-up">
+        <h4 class="mobile-suggestions-title">Suggested for you</h4>
+        <div class="mobile-suggestions-list">
+          <div class="mobile-suggestion-card">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="User">
+            <h4>Alex Coder</h4>
+            <button class="btn-follow-sm">Follow</button>
+          </div>
+          <div class="mobile-suggestion-card">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="User">
+            <h4>Anna UI</h4>
+            <button class="btn-follow-sm">Follow</button>
+          </div>
+          <div class="mobile-suggestion-card">
+            <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=100&q=80" alt="User">
+            <h4>DevGuy</h4>
+            <button class="btn-follow-sm">Follow</button>
+          </div>
+          <div class="mobile-suggestion-card">
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80" alt="User">
+            <h4>Fabian</h4>
+            <button class="btn-follow-sm">Follow</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feed Filter Tabs -->
+      <div class="feed-tabs animate-fade-up" style="--delay: 0.1s;">
+        <button class="tab-btn active">For You</button>
+        <button class="tab-btn">Following</button>
+        <button class="tab-btn">Design Systems</button>
+      </div>
+
+      <!-- Posts Column -->
+      <div class="feed-column">
+        
+        <!-- Post 1 -->
+        <article class="feed-post-card animate-fade-up" style="--delay: 0.15s;">
+          <div class="post-header">
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80" alt="Fabian" class="post-avatar">
+            <div class="post-meta">
+              <h4>Fabian <i class="ph-fill ph-check-circle verified-badge"></i></h4>
+              <span>@fabian_design • 2h ago</span>
+            </div>
+            <button class="post-options-btn"><i class="ph ph-dots-three"></i></button>
+          </div>
+          <div class="post-body">
+            <p>Just finished working on this new analytics dashboard concept. Tried to keep the charts clean and readable without relying on heavy external CSS frameworks. Thoughts? 📊🔥</p>
+            <div class="post-media dark-preview">
+              <div class="mock-widget">
+                <div class="widget-header"><span class="dot"></span><span>Analytics Overview</span></div>
+                <div class="chart-bars">
+                  <span style="height: 40%"></span><span style="height: 80%"></span><span style="height: 60%"></span>
+                  <span style="height: 90%"></span><span style="height: 50%"></span><span style="height: 75%"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="post-actions">
+            <button class="action-btn"><i class="ph ph-heart"></i> 342</button>
+            <button class="action-btn"><i class="ph ph-chat-circle"></i> 45</button>
+            <button class="action-btn"><i class="ph ph-share-network"></i> Share</button>
+            <button class="action-btn push-right"><i class="ph ph-bookmark-simple"></i></button>
+          </div>
+        </article>
+
+        <!-- Post 2 -->
+        <article class="feed-post-card animate-fade-up" style="--delay: 0.2s;">
+          <div class="post-header">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="Anna" class="post-avatar">
+            <div class="post-meta">
+              <h4>Anna UI</h4>
+              <span>@anna_creates • 5h ago</span>
+            </div>
+            <button class="btn-follow-sm" style="margin-left: auto; margin-right: 12px;">Follow</button>
+            <button class="post-options-btn"><i class="ph ph-dots-three"></i></button>
+          </div>
+          <div class="post-body">
+            <p>Experimenting with some 3D assets for a new landing page hero section. Loving the vibrant colors! 🎨✨</p>
+            <div class="post-media light-preview">
+              <img class="asset-img" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80" alt="3D Blue Monster">
+            </div>
+          </div>
+          <div class="post-actions">
+            <button class="action-btn active-like"><i class="ph-fill ph-heart"></i> 890</button>
+            <button class="action-btn"><i class="ph ph-chat-circle"></i> 112</button>
+            <button class="action-btn"><i class="ph ph-share-network"></i> Share</button>
+            <button class="action-btn push-right active-bookmark"><i class="ph-fill ph-bookmark-simple"></i></button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         RIGHT SIDEBAR: Ads & Suggestions
+    =========================================== -->
+    <aside class="right-sidebar scrollable-sidebar animate-fade-up" style="--delay: 0.2s;">
+      
+      <!-- Sponsored / Ads Widget -->
+      <div class="widget-box">
+        <div class="widget-header-row">
+          <h3 class="widget-title">Sponsored</h3>
+          <i class="ph ph-info" title="Why you are seeing this ad"></i>
+        </div>
+        <a href="#" class="ad-card">
+          <div class="ad-image-container">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=80" alt="Ad">
+            <span class="ad-badge">Ad</span>
+          </div>
+          <div class="ad-content">
+            <h4>DataScience Pro Bootcamp</h4>
+            <p>Master data structures with python and advance your career today.</p>
+            <div class="ad-meta">
+              <span>datascience.io</span>
+              <button class="btn-ad-action">Learn More</button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Suggested Creators Widget -->
+      <div class="widget-box">
+        <h3 class="widget-title">Suggested for you</h3>
+        
+        <div class="suggested-user">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="User">
+          <div class="suggested-user-info">
+            <h4>Alex Coder <i class="ph-fill ph-check-circle verified-badge" style="font-size:0.8rem;"></i></h4>
+            <span>@alex_dev</span>
+          </div>
+          <button class="btn-follow-sm">Follow</button>
+        </div>
+
+        <div class="suggested-user">
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80" alt="User">
+          <div class="suggested-user-info">
+            <h4>Sarah Designs</h4>
+            <span>@sarah_ux</span>
+          </div>
+          <button class="btn-follow-sm">Follow</button>
+        </div>
+
+        <div class="suggested-user">
+          <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=100&q=80" alt="User">
+          <div class="suggested-user-info">
+            <h4>Mark Systems</h4>
+            <span>@mark_sys</span>
+          </div>
+          <button class="btn-follow-sm">Follow</button>
+        </div>
+
+        <a href="#" class="view-all-link">View all suggestions</a>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- FLOATING BOTTOM BAR (Mobile) -->
+  <div class="mobile-floating-container" id="mobileFloatingContainer">
+    <nav class="mobile-nav-pill">
+      <a href="index.html" class="mobile-nav-item active" aria-label="Home"><i class="ph-fill ph-house"></i></a>
+      <a href="#" class="mobile-nav-item" aria-label="Search"><i class="ph ph-magnifying-glass"></i></a>
+      <a href="#" class="mobile-nav-item" aria-label="Notifications"><i class="ph ph-bell"></i></a>
+      <a href="appearance.html" class="mobile-nav-item" aria-label="Profile"><i class="ph ph-user"></i></a>
+      <button class="mobile-nav-item menu-trigger-btn" id="openBottomSheetBtn" aria-label="Menu"><i class="ph ph-squares-four"></i></button>
+    </nav>
+    <button class="floating-plus-btn" id="floatingPlusBtn" aria-label="Create Post"><i class="ph ph-plus"></i></button>
+  </div>
+
+  <!-- MODERN DRAGGABLE BOTTOM SHEET (Abbreviated for brevity) -->
+  <div class="bottom-sheet-overlay" id="bottomSheetOverlay">
+    <div class="bottom-sheet" id="bottomSheet">
+      <div class="bottom-sheet-header" id="bottomSheetHeader">
+        <div class="drag-handle"></div>
+        <div class="sheet-title-row">
+          <h3>Navigation Menu</h3>
+          <button class="close-sheet-btn" id="closeBottomSheetBtn"><i class="ph ph-x"></i></button>
+        </div>
+      </div>
+      <div class="bottom-sheet-content">
+        <div class="wide-nav-grid">
+          <a href="index.html" class="nav-card-module active">
+            <div class="module-icon"><i class="ph-fill ph-house"></i></div>
+            <div class="module-text"><h4>Home Feed</h4><p>Explore all posts</p></div>
+          </a>
+        </div>
+        <div class="clean-list-group">
+          <a href="settings.html" class="clean-list-item"><i class="ph ph-gear"></i><span>Settings</span></a>
+          <a href="security.html" class="clean-list-item"><i class="ph ph-lock-key"></i><span>Security</span></a>
+          <a href="appearance.html" class="clean-list-item"><i class="ph ph-palette"></i><span>Appearance</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

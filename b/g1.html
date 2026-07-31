@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Floating UI - Pure CSS</title>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <style>
+        /* ========================================== */
+        /* 1. CSS VARIABLES & BASE                    */
+        /* ========================================== */
+        :root {
+            /* Light Mode */
+            --bg-canvas: #eef2f6;
+            --bg-app: #ffffff;
+            --bg-sidebar: #fcfcfc;
+            --bg-card: #ffffff;
+            --bg-card-alt: #f9fafb;
+            --bg-element: #f3f4f6;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            
+            --primary-blue: #3b82f6;
+            --primary-blue-hover: #2563eb;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            
+            --shadow-window: 0 30px 60px -15px rgba(0,0,0,0.1);
+            --shadow-card: 0 10px 30px -10px rgba(0,0,0,0.05);
+            --shadow-float: 0 20px 40px rgba(0,0,0,0.08);
+            --shadow-glow: 0 10px 25px rgba(59, 130, 246, 0.4);
+            
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+        }
+
+        body.dark {
+            /* Dark Mode */
+            --bg-canvas: #0a0a0a;
+            --bg-app: #121212;
+            --bg-sidebar: #181818;
+            --bg-card: #1e1e1e;
+            --bg-card-alt: #161616;
+            --bg-element: #2a2a2a;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --border-color: #2a2a2a;
+            
+            --shadow-window: 0 30px 60px -15px rgba(0,0,0,0.8);
+            --shadow-card: 0 10px 30px -10px rgba(0,0,0,0.5);
+            --shadow-float: 0 20px 40px rgba(0,0,0,0.9);
+            --shadow-glow: 0 10px 25px rgba(59, 130, 246, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            /* Nice subtle background pattern for the "Floating" effect */
+            background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        button { border: none; background: none; cursor: pointer; font-family: inherit; }
+        ul { list-style: none; }
+
+        /* Hide scrollbars */
+        ::-webkit-scrollbar { width: 0; height: 0; }
+
+        /* ========================================== */
+        /* 2. APP CONTAINER (FLOATING WINDOW)         */
+        /* ========================================== */
+        .app-window {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-app);
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Desktop Floating Effect */
+        @media (min-width: 1024px) {
+            .app-window {
+                width: 95vw;
+                max-width: 1400px;
+                height: 90vh;
+                border-radius: 32px;
+                box-shadow: var(--shadow-window);
+                border: 1px solid var(--border-color);
+            }
+        }
+
+        /* ========================================== */
+        /* 3. DESKTOP SIDEBAR                         */
+        /* ========================================== */
+        .sidebar {
+            width: 320px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: none;
+            flex-direction: column;
+            padding: 40px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        @media (min-width: 1024px) {
+            .sidebar { display: flex; }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 48px;
+        }
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #a855f7, #f97316);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .profile-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .avatar-3d {
+            width: 100px;
+            height: 100px;
+            background-color: #ffe4d6;
+            border-radius: 50%;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .avatar-3d::after {
+            content: '';
+            width: 60px;
+            height: 60px;
+            background: #ffb894;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -10px;
+        }
+        .profile-name { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .profile-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+        .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; margin-bottom: 16px; }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+        .tag { background-color: var(--bg-element); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; cursor: pointer; }
+        .tag:hover { background-color: var(--border-color); }
+
+        .stats-list { display: flex; gap: 24px; font-size: 13px; color: var(--text-muted); margin-bottom: 40px; }
+        .stat-item { display: flex; align-items: center; gap: 8px; }
+        .stat-item strong { color: var(--text-main); }
+
+        .theme-toggle-sidebar {
+            margin-top: auto;
+            display: flex;
+            gap: 16px;
+        }
+        .theme-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 20px;
+        }
+        .theme-btn:hover { background-color: var(--bg-element); color: var(--text-main); }
+
+        /* ========================================== */
+        /* 4. MAIN CONTENT AREA                       */
+        /* ========================================== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-y: auto;
+            background-color: var(--bg-app);
+        }
+
+        /* Desktop specific content wrapper */
+        .desktop-content { display: none; padding: 0 40px 40px; }
+        @media (min-width: 1024px) {
+            .desktop-content { display: block; }
+            .mobile-content { display: none !important; }
+        }
+
+        /* Desktop Top Nav */
+        .desktop-nav {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(var(--bg-app), 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 32px 0;
+            margin-bottom: 20px;
+        }
+        .nav-tabs {
+            display: flex;
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            padding: 4px;
+        }
+        .nav-tab {
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+        .nav-tab.active {
+            background-color: var(--bg-element);
+            color: var(--text-main);
+            font-weight: 600;
+        }
+        .nav-actions { display: flex; align-items: center; gap: 16px; }
+        .likes-pill {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            padding: 4px;
+        }
+        .likes-icon { width: 28px; height: 28px; background-color: var(--accent-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+        .likes-count { font-size: 12px; font-weight: 700; padding: 0 12px; }
+        .circle-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 18px;
+        }
+
+        /* Filter Pills */
+        .filter-pills {
+            display: inline-flex;
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            padding: 4px;
+            margin-bottom: 32px;
+        }
+
+        /* Desktop Masonry Grid */
+        .masonry-grid {
+            column-count: 3;
+            column-gap: 24px;
+        }
+        @media (max-width: 1400px) { .masonry-grid { column-count: 2; } }
+        
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 24px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            box-shadow: var(--shadow-card);
+        }
+        .masonry-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-float); }
+
+        /* Card Styles */
+        .card-inner { border-radius: var(--radius-md); overflow: hidden; position: relative; }
+        .dark-card { background-color: #1a1a24; padding: 20px; color: white; }
+        .chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 60px; margin-top: 20px; }
+        .bar { background-color: var(--primary-blue); border-radius: 4px; width: 100%; }
+        
+        .monster-card { background: linear-gradient(to bottom, #dbeafe, #bfdbfe); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
+        body.dark .monster-card { background: linear-gradient(to bottom, #1e3a8a, #1e40af); }
+        .monster { width: 120px; height: 120px; background-color: #38bdf8; border-radius: 30px; position: relative; }
+        
+        .app-mockup { background-color: #111; aspect-ratio: 3/4; padding: 20px; border: 4px solid #333; }
+        
+        .trade-list { display: flex; flex-direction: column; gap: 12px; }
+        .trade-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 12px; }
+        
+        .finance-card { background-color: #111; color: white; padding: 24px; }
+        .finance-price { font-size: 28px; font-weight: 700; margin: 12px 0; }
+        .finance-chart { width: 100%; height: 40px; border-bottom: 2px solid var(--accent-green); margin-bottom: 20px; position: relative; }
+        
+        .astronaut-card { background: linear-gradient(45deg, #f3f4f6, #e5e7eb); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
+        body.dark .astronaut-card { background: linear-gradient(45deg, #1f2937, #374151); }
+        .astronaut { width: 80px; height: 100px; background-color: var(--primary-blue); border-radius: 40px; position: relative; }
+        .astro-helmet { width: 60px; height: 60px; background: white; border-radius: 20px; position: absolute; top: -10px; left: 10px; border: 4px solid #e5e7eb; }
+
+        /* ========================================== */
+        /* 5. MOBILE DASHBOARD (The specific UI requested)*/
+        /* ========================================== */
+        .mobile-content {
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            padding-bottom: 120px; /* Space for floating nav */
+            min-height: 100%;
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        .mh-logo {
+            width: 36px;
+            height: 36px;
+            background-color: var(--text-main);
+            color: var(--bg-app);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .mh-actions { display: flex; align-items: center; gap: 12px; }
+        .mh-btn { width: 36px; height: 36px; border-radius: 50%; background-color: var(--bg-element); display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--text-muted); }
+        .mh-avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ffe4d6; border: 1px solid var(--border-color); }
+
+        /* Overview Section */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .section-header h2 { font-size: 20px; font-weight: 700; }
+        .dropdown-btn {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-card);
+        }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .stat-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+        }
+        .sc-title { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); font-weight: 500; margin-bottom: 12px; }
+        .sc-value { font-size: 28px; font-weight: 700; margin-bottom: 12px; }
+        .sc-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+        .sc-badge.red { background-color: rgba(239, 68, 68, 0.1); color: var(--accent-red); }
+        .sc-badge.green { background-color: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
+        .sc-desc { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+
+        /* Customers List Section */
+        .customers-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-card);
+        }
+        .cs-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .cs-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+        .cs-list { display: flex; gap: 20px; overflow-x: auto; }
+        .cs-item { display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; }
+        .cs-avatar { width: 56px; height: 56px; border-radius: 50%; background-color: var(--bg-element); }
+        .cs-name { font-size: 13px; font-weight: 500; }
+
+        /* ========================================== */
+        /* 6. MOBILE FLOATING BOTTOM NAV              */
+        /* ========================================== */
+        .floating-nav-wrapper {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 16px; /* Gap between pill and blue button */
+            z-index: 1000;
+        }
+        @media (min-width: 1024px) {
+            .floating-nav-wrapper { display: none; }
+        }
+
+        /* The Pill */
+        .nav-pill {
+            background-color: var(--bg-app);
+            height: 64px;
+            border-radius: 32px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 32px;
+            box-shadow: var(--shadow-float);
+            border: 1px solid var(--border-color);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            color: var(--text-muted);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-icon.active { color: var(--primary-blue); }
+        .nav-icon:hover { color: var(--text-main); }
+        
+        .notification-dot {
+            position: absolute;
+            top: 0px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-red);
+            border-radius: 50%;
+            border: 2px solid var(--bg-app);
+        }
+
+        .nav-profile {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #ffe4d6;
+            border: 1px solid var(--border-color);
+        }
+
+        /* The Blue FAB */
+        .nav-fab {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: var(--shadow-glow);
+            border: none;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .nav-fab:active { transform: scale(0.95); background-color: var(--primary-blue-hover); }
+
+        /* Quick inline animation for fun */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .animate-bounce { animation: bounce 3s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+
+    <!-- Main Floating Window Container -->
+    <div class="app-window">
+        
+        <!-- ========================================== -->
+        <!-- DESKTOP SIDEBAR                            -->
+        <!-- ========================================== -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">ui</div>
+                ui.live
+            </div>
+
+            <div class="profile-card">
+                <div class="avatar-3d"></div>
+                <h1 class="profile-name">Fabian</h1>
+                <p class="profile-desc">UI/UX Designer. Curated premium assets for startups and creators.</p>
+            </div>
+
+            <h3 class="section-title">Tags</h3>
+            <div class="tags">
+                <span class="tag">Dashboard</span>
+                <span class="tag">Mobile App</span>
+                <span class="tag">Web</span>
+                <span class="tag">Dark</span>
+                <span class="tag">Light</span>
+                <span class="tag">Design system</span>
+                <span class="tag">UI Kit</span>
+            </div>
+
+            <div class="stats-list">
+                <div class="stat-item">
+                    <i class="ph ph-folder text-lg"></i>
+                    <span><strong>48</strong> freebies</span>
+                </div>
+                <div class="stat-item">
+                    <i class="ph ph-copy text-lg"></i>
+                    <span><strong>5.3k</strong> copies</span>
+                </div>
+            </div>
+
+            <div class="theme-toggle-sidebar">
+                <button class="theme-btn" onclick="toggleTheme('dark')"><i class="ph-fill ph-moon"></i></button>
+                <button class="theme-btn" onclick="toggleTheme('light')"><i class="ph-bold ph-sun"></i></button>
+            </div>
+        </aside>
+
+        <!-- ========================================== -->
+        <!-- MAIN CONTENT AREA                          -->
+        <!-- ========================================== -->
+        <main class="main-content">
+            
+            <!-- -------------------------------------- -->
+            <!-- DESKTOP VIEW                           -->
+            <!-- -------------------------------------- -->
+            <div class="desktop-content">
+                <!-- Top Nav -->
+                <nav class="desktop-nav">
+                    <div style="flex: 1;"></div> <!-- Spacer -->
+                    
+                    <div class="nav-tabs">
+                        <button class="nav-tab active">All posts</button>
+                        <button class="nav-tab">Templates</button>
+                        <button class="nav-tab">Components</button>
+                        <button class="nav-tab">Mockups</button>
+                        <button class="nav-tab">3D Assets</button>
+                    </div>
+                    
+                    <div class="nav-actions" style="flex: 1; justify-content: flex-end;">
+                        <div class="likes-pill">
+                            <div class="likes-icon"><i class="ph-fill ph-heart"></i></div>
+                            <span class="likes-count">21</span>
+                            <div class="circle-btn" style="width:24px;height:24px;border:none;"><i class="ph-bold ph-caret-down" style="font-size:12px;"></i></div>
+                        </div>
+                        <button class="circle-btn"><i class="ph-bold ph-magnifying-glass"></i></button>
+                    </div>
+                </nav>
+
+                <!-- Filter Pills -->
+                <div class="filter-pills">
+                    <button class="nav-tab active">Active</button>
+                    <button class="nav-tab">Pending</button>
+                </div>
+
+                <!-- Masonry Grid -->
+                <div class="masonry-grid">
+                    <!-- Card 1: Dark Stats -->
+                    <div class="masonry-item">
+                        <div class="card-inner dark-card">
+                            <div style="display:flex; justify-content:space-between;">
+                                <h3 style="font-size: 24px; margin:0;">687</h3>
+                                <div style="display:flex; gap:4px;">
+                                    <div style="width:6px;height:6px;background:var(--primary-blue);border-radius:50%;"></div>
+                                    <div style="width:6px;height:6px;background:var(--primary-blue);border-radius:50%;"></div>
+                                </div>
+                            </div>
+                            <div class="chart-bars">
+                                <div class="bar" style="height: 40%; opacity:0.7;"></div>
+                                <div class="bar" style="height: 100%;"></div>
+                                <div class="bar" style="height: 60%; opacity:0.5;"></div>
+                                <div class="bar" style="height: 90%;"></div>
+                                <div class="bar" style="height: 70%; opacity:0.8;"></div>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-top:16px; font-size:11px; color:#888;">
+                                <span>1.5m</span><span>1m</span><span>529k</span><span>4785</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: 3D Monster -->
+                    <div class="masonry-item">
+                        <div class="card-inner monster-card">
+                            <div class="monster animate-bounce">
+                                <!-- CSS Monster Face -->
+                                <div style="display:flex; justify-content:center; gap:8px; padding-top: 30px;">
+                                    <div style="width:20px;height:20px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;"><div style="width:8px;height:8px;background:black;border-radius:50%;"></div></div>
+                                    <div style="width:20px;height:20px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;"><div style="width:8px;height:8px;background:black;border-radius:50%;"></div></div>
+                                </div>
+                                <div style="width:30px;height:10px;background:#0ea5e9;border-radius:10px;margin:10px auto;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Mobile App Mockup -->
+                    <div class="masonry-item" style="grid-row: span 2;">
+                        <div class="card-inner app-mockup">
+                            <div style="display:flex; justify-content:space-between; color:white; font-size:12px; margin-bottom: 24px;">
+                                <i class="ph-bold ph-arrow-left"></i><span>Lumburr</span><i class="ph-bold ph-dots-three"></i>
+                            </div>
+                            <div style="width:80px;height:80px;background:#a855f7;border-radius:20px;margin:0 auto 30px;transform:rotate(5deg);"></div>
+                            <div style="display:flex;flex-direction:column;gap:12px;">
+                                <div style="height:40px;background:#222;border-radius:10px;display:flex;align-items:center;padding:0 12px;gap:12px;">
+                                    <div style="width:20px;height:20px;background:#c084fc;border-radius:6px;"></div><div style="width:50px;height:4px;background:#444;border-radius:2px;"></div>
+                                </div>
+                                <div style="height:40px;background:#222;border-radius:10px;display:flex;align-items:center;padding:0 12px;gap:12px;">
+                                    <div style="width:20px;height:20px;background:#60a5fa;border-radius:6px;"></div><div style="width:40px;height:4px;background:#444;border-radius:2px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Trade List -->
+                    <div class="masonry-item">
+                        <div style="display:flex; justify-content:space-between; margin-bottom: 16px;">
+                            <h3 style="font-size: 16px;">Trade</h3>
+                            <i class="ph-bold ph-sliders-horizontal" style="color:var(--text-muted);"></i>
+                        </div>
+                        <div class="trade-list">
+                            <div class="trade-item">
+                                <div style="display:flex;align-items:center;gap:12px;">
+                                    <div style="width:32px;height:32px;background:#dbeafe;color:#2563eb;border-radius:50%;display:flex;align-items:center;justify-content:center;"><i class="ph-fill ph-currency-eth"></i></div>
+                                    <span style="font-weight:600;font-size:13px;">Ethereum</span>
+                                </div>
+                                <button style="background:var(--bg-element);padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;">Buy</button>
+                            </div>
+                            <div class="trade-item">
+                                <div style="display:flex;align-items:center;gap:12px;">
+                                    <div style="width:32px;height:32px;background:#ffedd5;color:#ea580c;border-radius:50%;display:flex;align-items:center;justify-content:center;"><i class="ph-fill ph-currency-btc"></i></div>
+                                    <span style="font-weight:600;font-size:13px;">Bitcoin</span>
+                                </div>
+                                <button style="background:var(--bg-element);padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;">Buy</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Dark Finance -->
+                    <div class="masonry-item">
+                        <div class="card-inner finance-card">
+                            <p style="color:#888;font-size:12px;">Best to buy</p>
+                            <div class="finance-price">$3,326<span style="color:#888;font-size:16px;">.18</span></div>
+                            <div class="finance-chart"></div>
+                            <button style="width:100%;background:white;color:black;padding:12px;border-radius:12px;font-weight:700;font-size:13px;">Smart trade</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: Astronaut 3D -->
+                    <div class="masonry-item">
+                        <div class="card-inner astronaut-card">
+                            <div class="astronaut animate-bounce">
+                                <div class="astro-helmet"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- -------------------------------------- -->
+            <!-- MOBILE VIEW (Dashboard layout)         -->
+            <!-- -------------------------------------- -->
+            <div class="mobile-content">
+                
+                <header class="mobile-header">
+                    <div class="mh-logo"><i class="ph-bold ph-squares-four"></i></div>
+                    <div class="mh-actions">
+                        <button class="mh-btn" onclick="toggleTheme('system')"><i class="ph-bold ph-moon"></i></button>
+                        <button class="mh-btn"><i class="ph-bold ph-magnifying-glass"></i></button>
+                        <button class="mh-btn"><i class="ph-bold ph-chat-circle"></i></button>
+                        <div class="mh-avatar"></div>
+                    </div>
+                </header>
+
+                <div class="section-header">
+                    <h2>Overview</h2>
+                    <button class="dropdown-btn">Last 7 days <i class="ph-bold ph-caret-down"></i></button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="sc-title"><i class="ph-bold ph-users"></i> Customers</div>
+                        <div class="sc-value">1,293</div>
+                        <div class="sc-badge red"><i class="ph-bold ph-arrow-down"></i> 36.8%</div>
+                        <div class="sc-desc">vs last month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="sc-title"><i class="ph-bold ph-wallet"></i> Balance</div>
+                        <div class="sc-value">256k</div>
+                        <div class="sc-badge green"><i class="ph-bold ph-arrow-up"></i> 36.8%</div>
+                        <div class="sc-desc">vs last month</div>
+                    </div>
+                </div>
+
+                <div class="customers-section">
+                    <h3 class="cs-title">857 new customers today!</h3>
+                    <p class="cs-desc">Send a welcome message to all new customers.</p>
+                    
+                    <div class="cs-list">
+                        <div class="cs-item">
+                            <div class="cs-avatar" style="background: linear-gradient(135deg, #fbcfe8, #f43f5e);"></div>
+                            <span class="cs-name">Joyce</span>
+                        </div>
+                        <div class="cs-item">
+                            <div class="cs-avatar" style="background: linear-gradient(135deg, #bfdbfe, #3b82f6);"></div>
+                            <span class="cs-name">Joyce</span>
+                        </div>
+                        <div class="cs-item">
+                            <div class="cs-avatar" style="background: linear-gradient(135deg, #e9d5ff, #a855f7);"></div>
+                            <span class="cs-name">Joyce</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MOBILE FLOATING BOTTOM NAV                 -->
+    <!-- ========================================== -->
+    <div class="floating-nav-wrapper">
+        <!-- The White Pill -->
+        <nav class="nav-pill">
+            <a href="#" class="nav-icon active"><i class="ph-bold ph-squares-four"></i></a>
+            <a href="#" class="nav-icon"><i class="ph-bold ph-magnifying-glass"></i></a>
+            <a href="#" class="nav-icon">
+                <i class="ph-bold ph-bell"></i>
+                <span class="notification-dot"></span>
+            </a>
+            <a href="#" class="nav-profile"></a>
+        </nav>
+        
+        <!-- The Separated Blue Button -->
+        <button class="nav-fab">
+            <i class="ph-bold ph-plus"></i>
+        </button>
+    </div>
+
+    <!-- Script for Theme Toggling -->
+    <script>
+        function toggleTheme(mode) {
+            const body = document.body;
+            if (mode === 'dark') {
+                body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else if (mode === 'light') {
+                body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                // System toggle (simple flip for mobile demo)
+                body.classList.toggle('dark');
+                localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+            }
+        }
+
+        // Check local storage on load
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+            }
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>u.live - Security Settings</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+
+  <!-- Floated Transparent Navbar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo floated-logo" style="text-decoration:none;">
+        <span class="logo-icon"><i class="ph-fill ph-circle"></i></span>
+        <span class="logo-text">u.live</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html">All posts</a>
+        <a href="#">Templates</a>
+        <a href="#">Components</a>
+        <a href="#">Mockups</a>
+        <a href="#">3D Assets</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="icon-btn search-btn" aria-label="Search">
+          <i class="ph ph-magnifying-glass"></i>
+        </button>
+
+        <button class="icon-btn" aria-label="Bookmarks" title="Bookmarks">
+          <i class="ph ph-bookmark-simple"></i>
+        </button>
+        <button class="icon-btn" aria-label="Notifications" title="Notifications">
+          <i class="ph ph-bell"></i>
+        </button>
+
+        <div class="user-profile-menu" id="userProfileMenu">
+          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="User Menu" title="User Menu">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User">
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Collapsible Floated Bottom-Left Theme Switcher (Hidden on Mobile) -->
+  <div class="floating-theme-widget" id="floatingThemeWidget">
+    <div class="theme-options-collapse" id="themeOptionsCollapse">
+      <button class="theme-pill-btn" data-mode="light" aria-label="Light Mode" title="Light Mode">
+        <i class="ph ph-sun"></i>
+      </button>
+      <button class="theme-pill-btn" data-mode="dark" aria-label="Dark Mode" title="Dark Mode">
+        <i class="ph ph-moon"></i>
+      </button>
+      <button class="theme-pill-btn active" data-mode="system" aria-label="System Theme" title="System Theme">
+        <i class="ph ph-desktop"></i>
+      </button>
+    </div>
+
+    <button class="theme-trigger-btn" id="themeTriggerBtn" aria-label="Toggle Theme Menu" title="Choose Theme">
+      <i class="ph ph-desktop" id="activeThemeIcon"></i>
+    </button>
+  </div>
+
+  <!-- Main Settings Layout -->
+  <main class="settings-layout">
+    
+    <!-- Mobile App Header (Only shows on mobile) -->
+    <div class="mobile-settings-header">
+      <h2>Security Settings</h2>
+    </div>
+
+    <!-- Sidebar Settings Navigation -->
+    <aside class="settings-sidebar">
+      <nav class="settings-nav">
+        <a href="settings.html" class="settings-nav-item">
+          <i class="ph ph-user"></i>
+          <span>Profile</span>
+        </a>
+        <a href="security.html" class="settings-nav-item active">
+          <i class="ph ph-lock-key"></i>
+          <span>Security</span>
+        </a>
+        <a href="#" class="settings-nav-item">
+          <i class="ph ph-globe"></i>
+          <span>Social profile</span>
+        </a>
+        <a href="#" class="settings-nav-item">
+          <i class="ph ph-envelope-simple"></i>
+          <span>Notifications</span>
+        </a>
+        <a href="#" class="settings-nav-item">
+          <i class="ph ph-user-minus"></i>
+          <span>Delete account</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Right Content Area -->
+    <section class="settings-content">
+      <h1 class="desktop-settings-title">Security & Credentials</h1>
+
+      <!-- Section 1: Change Password -->
+      <div class="settings-section">
+        <h2 class="section-heading">Change Password</h2>
+        
+        <form class="settings-form">
+          <div class="settings-input-group">
+            <label for="current-password">Current password</label>
+            <input type="password" id="current-password" placeholder="••••••••">
+          </div>
+
+          <div class="settings-input-group">
+            <label for="new-password">New password</label>
+            <input type="password" id="new-password" placeholder="••••••••">
+          </div>
+
+          <div class="settings-input-group">
+            <label for="confirm-password">Confirm new password</label>
+            <input type="password" id="confirm-password" placeholder="••••••••">
+          </div>
+          
+          <button type="button" class="btn-mobile-save">Update Password</button>
+        </form>
+      </div>
+
+      <!-- Section 2: Two-Factor Authentication (2FA) -->
+      <div class="settings-section">
+        <h2 class="section-heading">Two-Factor Authentication</h2>
+        
+        <div class="security-card-row">
+          <div class="security-info">
+            <h4>Authenticator App (2FA)</h4>
+            <p>Add an extra layer of security to your u.live account by entering a verification code from your mobile app.</p>
+          </div>
+          <button type="button" class="btn-outline">Enable 2FA</button>
+        </div>
+      </div>
+
+      <!-- Section 3: Active Sessions -->
+      <div class="settings-section">
+        <h2 class="section-heading">Active Login Sessions</h2>
+        
+        <div class="session-list">
+          <div class="session-item">
+            <div class="session-icon"><i class="ph ph-desktop"></i></div>
+            <div class="session-details">
+              <strong>Chrome on macOS (Current Session)</strong>
+              <span>Cairo, Egypt • Active Now</span>
+            </div>
+            <span class="session-badge active">Current</span>
+          </div>
+
+          <div class="session-item">
+            <div class="session-icon"><i class="ph ph-device-mobile"></i></div>
+            <div class="session-details">
+              <strong>u.live App on iPhone 15 Pro</strong>
+              <span>Giza, Egypt • 2 hours ago</span>
+            </div>
+            <button type="button" class="btn-text-danger">Revoke</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- FLOATING BOTTOM BAR -->
+  <div class="mobile-floating-container" id="mobileFloatingContainer">
+    <nav class="mobile-nav-pill">
+      <a href="index.html" class="mobile-nav-item" aria-label="Home"><i class="ph ph-house"></i></a>
+      <a href="#" class="mobile-nav-item" aria-label="Search"><i class="ph ph-magnifying-glass"></i></a>
+      <a href="#" class="mobile-nav-item" aria-label="Notifications">
+        <i class="ph ph-bell"></i>
+        <span class="notif-dot"></span>
+      </a>
+      <a href="security.html" class="mobile-nav-item active" aria-label="Profile"><i class="ph-fill ph-user"></i></a>
+      <button class="mobile-nav-item menu-trigger-btn" id="openBottomSheetBtn" aria-label="Menu" title="Menu">
+        <i class="ph ph-squares-four"></i>
+      </button>
+    </nav>
+    <button class="floating-plus-btn" id="floatingPlusBtn" aria-label="Create Post" title="Create">
+      <i class="ph ph-plus"></i>
+    </button>
+  </div>
+
+  <!-- MODERN DRAGGABLE BOTTOM SHEET -->
+  <div class="bottom-sheet-overlay" id="bottomSheetOverlay">
+    <div class="bottom-sheet" id="bottomSheet">
+      <div class="bottom-sheet-header" id="bottomSheetHeader">
+        <div class="drag-handle"></div>
+        <div class="sheet-title-row">
+          <h3>Navigation Menu</h3>
+          <button class="close-sheet-btn" id="closeBottomSheetBtn" aria-label="Close Menu">
+            <i class="ph ph-x"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="bottom-sheet-content">
+        <h4 class="sheet-section-title">Main Discovery</h4>
+        <div class="wide-nav-grid">
+          <a href="index.html" class="nav-card-module">
+            <div class="module-icon"><i class="ph-fill ph-house"></i></div>
+            <div class="module-text">
+              <h4>Home Feed</h4>
+              <p>Explore curated UI kits, mockups, and 3D assets</p>
+            </div>
+            <i class="ph ph-arrow-right module-arrow"></i>
+          </a>
+        </div>
+
+        <h4 class="sheet-section-title">Account & Preferences</h4>
+        <div class="clean-list-group">
+          <a href="login.html" class="clean-list-item">
+            <i class="ph ph-sign-in"></i>
+            <span>Sign In to Account</span>
+            <i class="ph ph-caret-right push-arrow"></i>
+          </a>
+          <a href="settings.html" class="clean-list-item">
+            <i class="ph ph-gear"></i>
+            <span>System Settings</span>
+            <i class="ph ph-caret-right push-arrow"></i>
+          </a>
+          <a href="security.html" class="clean-list-item">
+            <i class="ph ph-lock-key"></i>
+            <span>Security Credentials</span>
+            <i class="ph ph-caret-right push-arrow"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Bento Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon">✨</div>
+                <h2>CreativeHub</h2>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="active"><span>🏠</span> Overview</a>
+                <a href="#"><span>📊</span> Analytics</a>
+                <a href="#"><span>📁</span> Projects</a>
+                <a href="#"><span>⚙️</span> Settings</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <button id="mobile-menu-btn" class="menu-btn">☰</button>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search anything...">
+                </div>
+                <div class="profile-area">
+                    <button id="notify-btn" class="notify-btn">🔔<span class="badge"></span></button>
+                    <!-- Notification Dropdown -->
+                    <div class="notification-dropdown" id="dropdown">
+                        <p><strong>New message</strong> from Sophie Bennett</p>
+                        <p><strong>System update</strong> successful</p>
+                    </div>
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="avatar">
+                </div>
+            </header>
+
+            <!-- Bento Grid Layout -->
+            <section class="bento-grid">
+                <!-- Large Card: Main Stats -->
+                <div class="bento-card large-card hero-card">
+                    <div class="card-header">
+                        <h3>Total Balance</h3>
+                        <span class="tag">Last 7 days</span>
+                    </div>
+                    <h1 class="balance">$124,563.00</h1>
+                    <p class="trend positive">↑ 36.8% vs last month</p>
+                </div>
+
+                <!-- Medium Card: Quick Profile -->
+                <div class="bento-card profile-card">
+                    <img src="https://i.pravatar.cc/150?img=5" alt="User" class="large-avatar">
+                    <h3>Sophie Bennett <span class="verified">✔</span></h3>
+                    <p>Product Designer</p>
+                    <button class="primary-btn">Follow +</button>
+                </div>
+
+                <!-- Small Card: Analytics -->
+                <div class="bento-card stat-card">
+                    <h3>Views</h3>
+                    <h2>14.2K</h2>
+                    <div class="mini-chart"></div>
+                </div>
+
+                <!-- Wide Card: Recent Activity -->
+                <div class="bento-card wide-card">
+                    <h3>Recent Activity</h3>
+                    <ul class="activity-list">
+                        <li>
+                            <div class="act-icon">🎨</div>
+                            <div class="act-text">
+                                <strong>Published 3D Asset</strong>
+                                <span>2 hours ago</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="act-icon">💳</div>
+                            <div class="act-text">
+                                <strong>Subscription Renewed</strong>
+                                <span>5 hours ago</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
