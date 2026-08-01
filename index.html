@@ -41,13 +41,118 @@
         </button>
 
         <div class="user-profile-menu" id="userProfileMenu">
-          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="User Menu">
+          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="User Menu" title="User Menu">
             <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User">
           </button>
+
+          <!-- =========================================================
+               DESIGN B: WITH USER HEADER, AVATAR & GREEN BADGE (ACTIVE)
+          ========================================================== -->
+          <div class="profile-dropdown design-b" id="profileDropdown">
+            <div class="dropdown-user-header">
+              <div class="dropdown-header-info">
+                <strong>Sophie Bennett</strong>
+                <span>sophie@ui.live</span>
+              </div>
+              <div class="dropdown-header-avatar">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Sophie">
+              </div>
+            </div>
+
+            <div class="dropdown-list">
+              <a href="#" class="dropdown-item active-item">
+                <i class="ph-fill ph-check-circle"></i>
+                <span>Profile</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-chat-circle-text"></i>
+                <span>Community</span>
+                <span class="badge-plus">+</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-credit-card"></i>
+                <span>Subscription</span>
+                <span class="badge-pro green">⚡ PRO</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-gear"></i>
+                <span>Settings</span>
+              </a>
+
+              <div class="dropdown-divider"></div>
+
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-info"></i>
+                <span>Help center</span>
+              </a>
+              <a href="login.html" class="dropdown-item">
+                <i class="ph ph-sign-out"></i>
+                <span>Sign out</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- =========================================================
+               DESIGN A: CLEAN LIST & PINK BADGE (COMMENTED OUT)
+               To use: Uncomment this block & comment out Design B above.
+          ========================================================== -->
+          <!--
+          <div class="profile-dropdown design-a" id="profileDropdown">
+            <div class="dropdown-list">
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-user"></i>
+                <span>Profile</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-chat-circle-text"></i>
+                <span>Community</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-credit-card"></i>
+                <span>Subscription</span>
+                <span class="badge-pro pink">⚡ PRO</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-gear"></i>
+                <span>Settings</span>
+              </a>
+
+              <div class="dropdown-divider"></div>
+
+              <a href="#" class="dropdown-item">
+                <i class="ph ph-info"></i>
+                <span>Help center</span>
+              </a>
+              <a href="login.html" class="dropdown-item">
+                <i class="ph ph-sign-out"></i>
+                <span>Sign out</span>
+              </a>
+            </div>
+          </div>
+          -->
+
         </div>
       </div>
     </div>
   </header>
+  <!-- Collapsible Floated Bottom-Left Theme Switcher (Hidden on Mobile) -->
+  <div class="floating-theme-widget" id="floatingThemeWidget">
+    <div class="theme-options-collapse" id="themeOptionsCollapse">
+      <button class="theme-pill-btn" data-mode="light" aria-label="Light Mode" title="Light Mode">
+        <i class="ph ph-sun"></i>
+      </button>
+      <button class="theme-pill-btn" data-mode="dark" aria-label="Dark Mode" title="Dark Mode">
+        <i class="ph ph-moon"></i>
+      </button>
+      <button class="theme-pill-btn active" data-mode="system" aria-label="System Theme" title="System Theme">
+        <i class="ph ph-desktop"></i>
+      </button>
+    </div>
+
+    <button class="theme-trigger-btn" id="themeTriggerBtn" aria-label="Toggle Theme Menu" title="Choose Theme">
+      <i class="ph ph-desktop" id="activeThemeIcon"></i>
+    </button>
+  </div>
 
   <!-- 3-COLUMN DASHBOARD LAYOUT -->
   <main class="main-container feed-layout">
