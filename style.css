@@ -1482,7 +1482,7 @@ body {
    GLOBAL DYNAMIC ACCENT COLOR SYSTEM
 ========================================================================== */
 :root {
-  --accent-color: #4f46e5; /* Default Indigo - overridden by JS */
+  --accent-color: #1e7bff; /* Default Indigo - overridden by JS */
 }
 
 /* Apply the dynamic accent color to key UI elements globally */
