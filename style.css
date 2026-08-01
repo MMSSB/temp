@@ -108,7 +108,7 @@ body {
 }
 
 .nav-container {
-  max-width: 1440px;
+  /* max-width: 1440px; */
   margin: 0 auto;
   height: 74px;
   display: flex;
