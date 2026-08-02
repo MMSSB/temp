@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>u.live - Social Profile Settings</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="settings.css">
+
+  <style>
+    /* =========================================================================
+       SMART SAVE BUTTON: Hidden by default, shows when changes are detected
+    ========================================================================== */
+    .btn-smart-save {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+      margin-top: 24px;
+      background: var(--accent-color, #1e7bff);
+      color: #ffffff;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 4px 16px color-mix(in srgb, var(--accent-color, #1e7bff) 30%, transparent);
+    }
+    .btn-smart-save.show-changes {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .btn-smart-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px color-mix(in srgb, var(--accent-color, #1e7bff) 45%, transparent);
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Floated Transparent Navbar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo floated-logo" style="text-decoration:none;">
+        <span class="logo-icon"><i class="ph-fill ph-circle"></i></span>
+        <span class="logo-text">u.live</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html">All posts</a>
+        <a href="#">Templates</a>
+        <a href="#">Components</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="user-profile-menu" id="userProfileMenu">
+          <button class="user-avatar-btn" id="userAvatarBtn">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User">
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="settings-layout">
+    
+    <aside class="settings-sidebar">
+      <nav class="settings-nav">
+        <a href="settings.html" class="settings-nav-item">
+          <i class="ph ph-user"></i>
+          <span>Profile</span>
+        </a>
+        <a href="security.html" class="settings-nav-item">
+          <i class="ph ph-lock-key"></i>
+          <span>Security</span>
+        </a>
+        <a href="appearance.html" class="settings-nav-item">
+          <i class="ph ph-palette"></i>
+          <span>Appearance</span>
+        </a>
+        <a href="social.html" class="settings-nav-item active">
+          <i class="ph ph-globe"></i>
+          <span>Social profile</span>
+        </a>
+      </nav>
+    </aside>
+
+    <section class="settings-content">
+      <h1 class="desktop-settings-title">Social Profile Links</h1>
+
+      <div class="settings-section">
+        <h2 class="section-heading">Connect Your Socials</h2>
+        <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:20px;">These links will appear directly on your public profile card.</p>
+        
+        <form class="settings-form" id="socialSettingsForm">
+          
+          <div class="settings-input-group">
+            <label for="twitter-link"><i class="ri-twitter-x-line"></i> Twitter / X URL</label>
+            <input type="url" id="twitter-link" placeholder="https://x.com/username">
+          </div>
+
+          <div class="settings-input-group">
+            <label for="dribbble-link"><i class="ri-dribbble-line"></i> Dribbble URL</label>
+            <input type="url" id="dribbble-link" placeholder="https://dribbble.com/username">
+          </div>
+
+          <div class="settings-input-group">
+            <label for="behance-link"><i class="ri-behance-line"></i> Behance URL</label>
+            <input type="url" id="behance-link" placeholder="https://behance.net/username">
+          </div>
+
+          <div class="settings-input-group">
+            <label for="instagram-link"><i class="ri-instagram-line"></i> Instagram URL</label>
+            <input type="url" id="instagram-link" placeholder="https://instagram.com/username">
+          </div>
+          
+          <!-- SMART SAVE BUTTON (Hidden until you change any link) -->
+          <button type="submit" class="btn-mobile-save btn-smart-save" id="saveSocialBtn">Apply & Save Social Links</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+
+  <!-- SOCIAL LINKS SAVE LOGIC INJECTED IN HTML -->
+  <script type="module">
+    import { db, auth } from './fl.js';
+    import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('socialSettingsForm');
+      const twitterInput = document.getElementById('twitter-link');
+      const dribbbleInput = document.getElementById('dribbble-link');
+      const behanceInput = document.getElementById('behance-link');
+      const instagramInput = document.getElementById('instagram-link');
+      const saveBtn = document.getElementById('saveSocialBtn');
+      
+      let currentUser = null;
+
+      // FUNCTION: TRIGGER SAVE BUTTON VISIBILITY WHEN CHANGED
+      function showSaveButton() {
+        saveBtn.classList.add('show-changes');
+      }
+
+      // LISTEN TO ANY CHANGE ON SOCIAL INPUTS
+      [twitterInput, dribbbleInput, behanceInput, instagramInput].forEach(input => {
+        input.addEventListener('input', showSaveButton);
+      });
+
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          currentUser = user;
+          try {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+              const socials = userDoc.data().socials || {};
+              twitterInput.value = socials.twitter || "";
+              dribbbleInput.value = socials.dribbble || "";
+              behanceInput.value = socials.behance || "";
+              instagramInput.value = socials.instagram || "";
+            }
+          } catch (e) {
+            console.error("Error loading socials:", e);
+          }
+        } else {
+          window.location.href = 'login.html';
+        }
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!currentUser) return;
+
+        saveBtn.innerText = "Applying & Saving...";
+        saveBtn.disabled = true;
+
+        try {
+          await updateDoc(doc(db, "users", currentUser.uid), {
+            socials: {
+              twitter: twitterInput.value.trim(),
+              dribbble: dribbbleInput.value.trim(),
+              behance: behanceInput.value.trim(),
+              instagram: instagramInput.value.trim()
+            }
+          });
+          alert("Social links updated & applied successfully! 🔥");
+          
+          // Reset button and hide after saving
+          saveBtn.innerText = "Apply & Save Social Links";
+          saveBtn.disabled = false;
+          saveBtn.classList.remove('show-changes');
+        } catch (error) {
+          alert("Failed to update: " + error.message);
+          saveBtn.innerText = "Apply & Save Social Links";
+          saveBtn.disabled = false;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

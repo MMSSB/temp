@@ -12,12 +12,231 @@
   <link rel="stylesheet" href="settings.css">
 
   <style>
+    /* =========================================================================
+       SMART SAVE BUTTON: Hidden by default, shows when changes are detected
+    ========================================================================== */
+    .btn-smart-save {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+      margin-top: 24px;
+      background: var(--accent-color, #1e7bff);
+      color: #ffffff;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 4px 16px color-mix(in srgb, var(--accent-color, #1e7bff) 30%, transparent);
+    }
+    .btn-smart-save.show-changes {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .btn-smart-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px color-mix(in srgb, var(--accent-color, #1e7bff) 45%, transparent);
+    }
 
+    /* =========================================================================
+       IMAGE PICKER: DESKTOP MODAL vs. MOBILE FULL-SCREEN BOTTOM SHEET
+    ========================================================================== */
+    .image-picker-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 11000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .image-picker-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* DESKTOP MODAL STYLE */
+    .image-picker-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 520px;
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      max-height: 88vh;
+    }
+
+    .mobile-only-handle,
+    .mobile-only-hint {
+      display: none;
+    }
+
+    /* MOBILE: FULL SCREEN BOTTOM SHEET STYLE */
+    @media (max-width: 640px) {
+      .image-picker-overlay {
+        align-items: flex-end;
+      }
+      .image-picker-box {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-width: 100%;
+        height: 92vh !important;
+        max-height: 92vh !important;
+        border-radius: 28px 28px 0 0;
+        border-top: 1px solid var(--border-color);
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.35);
+        transform: translateY(100%);
+        padding: 16px 20px 24px;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .image-picker-overlay.active .image-picker-box {
+        transform: translateY(0);
+      }
+      .mobile-only-handle,
+      .mobile-only-hint {
+        display: block;
+      }
+    }
+
+    .picker-drag-handle-area {
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+      padding-bottom: 8px;
+    }
+    .picker-drag-handle-area:active {
+      cursor: grabbing;
+    }
+    .picker-drag-handle {
+      width: 44px;
+      height: 5px;
+      background: var(--border-color);
+      border-radius: 99px;
+      margin: 0 auto 12px;
+    }
+
+    .picker-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+      flex-shrink: 0;
+    }
+    .picker-tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: var(--pill-bg);
+      color: var(--text-muted);
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .picker-tab-btn.active {
+      background: var(--accent-color);
+      color: #fff;
+    }
+    .picker-tab-content {
+      display: none;
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .picker-tab-content.active {
+      display: block;
+    }
+
+    .image-grid-scroll {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding: 4px;
+    }
+    @media (max-width: 640px) {
+      .image-grid-scroll {
+        max-height: 380px;
+      }
+    }
+    .preset-img-item {
+      width: 100%;
+      height: 80px;
+      border-radius: 10px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .preset-img-item:hover, .preset-img-item.selected {
+      border-color: var(--accent-color);
+      transform: scale(0.96);
+    }
+    .preview-box {
+      margin-top: 12px;
+      text-align: center;
+      background: var(--pill-bg);
+      padding: 12px;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+    .preview-box img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-color);
+    }
+
+    .modal-save-footer {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+    .btn-modal-save-visible {
+      display: block !important;
+      width: 100% !important;
+      background: var(--accent-color) !important;
+      color: #ffffff !important;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 4px 14px color-mix(in srgb, var(--accent-color) 30%, transparent);
+      transition: all 0.2s ease;
+    }
+    .btn-modal-save-visible:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px color-mix(in srgb, var(--accent-color) 45%, transparent);
+    }
   </style>
 </head>
 <body>
 
-  <!-- Floated Transparent Navbar (Solid when scrolled) -->
+  <!-- Floated Transparent Navbar -->
   <header class="navbar" id="navbar">
     <div class="nav-container">
       <a href="index.html" class="nav-logo floated-logo" style="text-decoration:none;">
@@ -26,7 +245,7 @@
       </a>
 
       <nav class="nav-links">
-        <a href="#" class="active">All posts</a>
+        <a href="index.html">All posts</a>
         <a href="#">Templates</a>
         <a href="#">Components</a>
         <a href="#">Mockups</a>
@@ -34,21 +253,7 @@
       </nav>
 
       <div class="nav-actions">
-        <!-- =========================================================
-             COMMENTED FOR FUTURE UPDATES: OLD LIKES SWITCH
-        ========================================================== -->
-        <!--
-        <div class="like-counter">
-          <i class="ri-heart-fill heart-icon"></i>
-          <span>21</span>
-          <div class="toggle-switch" id="likeToggle">
-            <div class="toggle-knob"></div>
-          </div>
-        </div>
-        -->
-
-        <!-- NEW: NOTIFICATIONS & BOOKMARK ICONS IN NAVBAR -->
-                 <button class="icon-btn search-btn" aria-label="Search">
+        <button class="icon-btn search-btn" aria-label="Search">
           <i class="ph ph-magnifying-glass"></i>
         </button>
 
@@ -59,126 +264,36 @@
           <i class="ph ph-bell"></i>
         </button>
 
-
         <div class="user-profile-menu" id="userProfileMenu">
           <button class="user-avatar-btn" id="userAvatarBtn" aria-label="User Menu" title="User Menu">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User">
+            <img src="images/user.png" alt="User">
           </button>
 
-          <!-- =========================================================
-               DESIGN B: WITH USER HEADER, AVATAR & GREEN BADGE (ACTIVE)
-          ========================================================== -->
-          <div class="profile-dropdown design-b" id="profileDropdown">
-            <div class="dropdown-user-header">
-              <div class="dropdown-header-info">
-                <strong>Sophie Bennett</strong>
-                <span>sophie@ui.live</span>
-              </div>
-              <div class="dropdown-header-avatar">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Sophie">
-              </div>
-            </div>
-
-            <div class="dropdown-list">
-              <a href="#" class="dropdown-item active-item">
-                <i class="ph-fill ph-check-circle"></i>
-                <span>Profile</span>
-              </a>
-              <a href="#" class="dropdown-item">
-                <i class="ph ph-chat-circle-text"></i>
-                <span>Community</span>
-                <span class="badge-plus">+</span>
-              </a>
-              <a href="#" class="dropdown-item">
-                <i class="ph ph-credit-card"></i>
-                <span>Subscription</span>
-                <span class="badge-pro green">⚡ PRO</span>
-              </a>
-              <a href="#" class="dropdown-item">
-                <i class="ph ph-gear"></i>
-                <span>Settings</span>
-              </a>
-
-              <div class="dropdown-divider"></div>
-
-              <a href="#" class="dropdown-item">
-                <i class="ph ph-info"></i>
-                <span>Help center</span>
-              </a>
-              <a href="login.html" class="dropdown-item">
-                <i class="ph ph-sign-out"></i>
-                <span>Sign out</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- =========================================================
-               DESIGN A: CLEAN LIST & PINK BADGE (COMMENTED OUT)
-               To use: Uncomment this block & comment out Design B above.
-          ========================================================== -->
-          <!--
           <div class="profile-dropdown design-a" id="profileDropdown">
             <div class="dropdown-list">
-              <a href="#" class="dropdown-item">
+              <a href="profile.html" class="dropdown-item">
                 <i class="ph ph-user"></i>
                 <span>Profile</span>
               </a>
-              <a href="#" class="dropdown-item">
-                <i class="ph ph-chat-circle-text"></i>
-                <span>Community</span>
-              </a>
-              <a href="#" class="dropdown-item">
-                <i class="ph ph-credit-card"></i>
-                <span>Subscription</span>
-                <span class="badge-pro pink">⚡ PRO</span>
-              </a>
-              <a href="#" class="dropdown-item">
+              <a href="settings.html" class="dropdown-item active-item">
                 <i class="ph ph-gear"></i>
                 <span>Settings</span>
               </a>
-
               <div class="dropdown-divider"></div>
-
-              <a href="#" class="dropdown-item">
-                <i class="ph ph-info"></i>
-                <span>Help center</span>
-              </a>
-              <a href="login.html" class="dropdown-item">
+              <button class="dropdown-item logout-action-btn" style="width: 100%; text-align: left; background: transparent; border: none; font-family: inherit; cursor: pointer;">
                 <i class="ph ph-sign-out"></i>
                 <span>Sign out</span>
-              </a>
+              </button>
             </div>
           </div>
-          -->
-
         </div>
       </div>
     </div>
   </header>
-    <!-- Collapsible Floated Bottom-Left Theme Switcher (Hidden on Mobile) -->
-  <div class="floating-theme-widget" id="floatingThemeWidget">
-    <div class="theme-options-collapse" id="themeOptionsCollapse">
-      <button class="theme-pill-btn" data-mode="light" aria-label="Light Mode" title="Light Mode">
-        <i class="ph ph-sun"></i>
-      </button>
-      <button class="theme-pill-btn" data-mode="dark" aria-label="Dark Mode" title="Dark Mode">
-        <i class="ph ph-moon"></i>
-      </button>
-      <button class="theme-pill-btn active" data-mode="system" aria-label="System Theme" title="System Theme">
-        <i class="ph ph-desktop"></i>
-      </button>
-    </div>
-
-    <button class="theme-trigger-btn" id="themeTriggerBtn" aria-label="Toggle Theme Menu" title="Choose Theme">
-      <i class="ph ph-desktop" id="activeThemeIcon"></i>
-    </button>
-  </div>
-
 
   <!-- Main Settings Layout -->
   <main class="settings-layout">
     
-    <!-- Mobile App Header (Only shows on mobile) -->
     <div class="mobile-settings-header">
       <h2>Edit Profile</h2>
     </div>
@@ -186,29 +301,25 @@
     <!-- Sidebar Settings Navigation -->
     <aside class="settings-sidebar">
       <nav class="settings-nav">
-        <a href="settings" class="settings-nav-item active">
+        <a href="settings.html" class="settings-nav-item active">
           <i class="ph ph-user"></i>
           <span>Profile</span>
         </a>
-        <a href="security" class="settings-nav-item">
+        <a href="security.html" class="settings-nav-item">
           <i class="ph ph-lock-key"></i>
           <span>Security</span>
         </a>
-        <a href="appearance" class="settings-nav-item">
+        <a href="appearance.html" class="settings-nav-item">
           <i class="ph ph-palette"></i>
           <span>Appearance</span>
         </a>
-        <a href="#" class="settings-nav-item">
+        <a href="social.html" class="settings-nav-item">
           <i class="ph ph-globe"></i>
           <span>Social profile</span>
         </a>
         <a href="#" class="settings-nav-item">
           <i class="ph ph-envelope-simple"></i>
           <span>Notifications</span>
-        </a>
-        <a href="#" class="settings-nav-item">
-          <i class="ph ph-user-minus"></i>
-          <span>Delete account</span>
         </a>
       </nav>
     </aside>
@@ -217,144 +328,316 @@
     <section class="settings-content">
       <h1 class="desktop-settings-title">Account settings</h1>
 
-      <!-- Section 1: Profile (Becomes a native card on mobile) -->
       <div class="settings-section">
         <h2 class="section-heading">Profile Details</h2>
         
         <div class="avatar-upload-row">
-          <div class="avatar-upload-circle" title="Upload new avatar">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=288&q=80" alt="User Avatar">
+          <div class="avatar-upload-circle" id="openImagePickerBtn" title="Change Avatar">
+            <img id="settings-avatar-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=288&q=80" alt="User Avatar">
             <div class="avatar-overlay"><i class="ph-fill ph-camera"></i></div>
           </div>
           <p class="avatar-upload-desc">
-            Update your avatar by clicking the image 288x288 px size recommended in PNG or JPG format only.
+            Click your avatar to choose from presets or paste an image link (supports Google Drive & external URLs).
           </p>
         </div>
 
-        <form class="settings-form">
+        <form class="settings-form" id="profileSettingsForm">
           <div class="settings-input-group">
             <label for="display-name">Display name</label>
-            <input type="text" id="display-name" value="Author Name">
+            <input type="text" id="display-name" placeholder="Fabian Designer">
           </div>
 
           <div class="settings-input-group">
             <label for="slogan">Slogan (Bio)</label>
-            <input type="text" id="slogan" placeholder="i.e. Daily curated premium assets for startups and creators.">
+            <input type="text" id="slogan" placeholder="I design web and mobile apps that not only work seamlessly but also drive revenue growth for businesses.">
           </div>
 
-          <!-- Responsive 2-column row (Stacks on mobile automatically) -->
+          <div class="settings-input-group">
+            <label for="tags-input">Tags (Comma separated)</label>
+            <input type="text" id="tags-input" placeholder="Dashboard, Mobile App, Web, Dark, Light, UI kits, 3D">
+          </div>
+
           <div class="settings-form-row">
             <div class="settings-input-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" placeholder="designer@example.com">
+              <label for="username-input">Username (Capital Only)</label>
+              <!-- يجبر الإدخال على الحروف الكبيرة ومنع المسافات -->
+              <input type="text" id="username-input" pattern="[A-Z0-9_]+" oninput="this.value = this.value.toUpperCase().replace(/\s/g, '');" placeholder="MMS_BUILDER">
             </div>
 
             <div class="settings-input-group">
-              <label for="location">Location</label>
-              <select id="location">
-                <option value="" disabled selected>Select location</option>
-                <option value="eg">Egypt</option>
-                <option value="us">United States</option>
-                <option value="uk">United Kingdom</option>
-                <option value="ae">United Arab Emirates</option>
-              </select>
-              <i class="ph ph-caret-down select-arrow"></i>
+              <label for="email">Email (Read only)</label>
+              <input type="email" id="email" disabled>
             </div>
           </div>
           
-          <button type="button" class="btn-mobile-save">Save Profile</button>
-        </form>
-      </div>
-
-      <!-- Section 2: Security -->
-      <!-- <div class="settings-section">
-        <h2 class="section-heading">Security</h2>
-        
-        <form class="settings-form">
           <div class="settings-input-group">
-            <label for="current-password">Current password</label>
-            <input type="password" id="current-password" placeholder="••••••••">
-          </div>
-
-          <div class="settings-input-group">
-            <label for="new-password">New password</label>
-            <input type="password" id="new-password" placeholder="••••••••">
-          </div>
-
-          <div class="settings-input-group">
-            <label for="confirm-password">Confirm new password</label>
-            <input type="password" id="confirm-password" placeholder="••••••••">
+            <label for="website">Website Link</label>
+            <input type="text" id="website" placeholder="u.live/fabian">
           </div>
           
-          <button type="button" class="btn-mobile-save">Update Password</button>
+          <!-- SMART SAVE BUTTON: Hides initially, shows on change -->
+          <button type="submit" class="btn-mobile-save btn-smart-save" id="saveProfileBtn">Apply & Save Profile</button>
         </form>
-      </div> -->
+      </div>
 
     </section>
   </main>
 
-  <!-- FLOATING BOTTOM BAR -->
-  <div class="mobile-floating-container" id="mobileFloatingContainer">
-    <nav class="mobile-nav-pill">
-      <a href="index.html" class="mobile-nav-item" aria-label="Home"><i class="ph ph-house"></i></a>
-      <a href="#" class="mobile-nav-item" aria-label="Search"><i class="ph ph-magnifying-glass"></i></a>
-      <a href="#" class="mobile-nav-item" aria-label="Notifications">
-        <i class="ph ph-bell"></i>
-        <span class="notif-dot"></span>
-      </a>
-      <a href="settings.html" class="mobile-nav-item active" aria-label="Profile"><i class="ph-fill ph-user"></i></a>
-      <button class="mobile-nav-item menu-trigger-btn" id="openBottomSheetBtn" aria-label="Menu" title="Menu">
-        <i class="ph ph-squares-four"></i>
-      </button>
-    </nav>
-    <button class="floating-plus-btn" id="floatingPlusBtn" aria-label="Create Post" title="Create">
-      <i class="ph ph-plus"></i>
-    </button>
-  </div>
-
-  <!-- MODERN DRAGGABLE BOTTOM SHEET -->
-  <div class="bottom-sheet-overlay" id="bottomSheetOverlay">
-    <div class="bottom-sheet" id="bottomSheet">
-      <div class="bottom-sheet-header" id="bottomSheetHeader">
-        <div class="drag-handle"></div>
-        <div class="sheet-title-row">
-          <h3>Navigation Menu</h3>
-          <button class="close-sheet-btn" id="closeBottomSheetBtn" aria-label="Close Menu">
-            <i class="ph ph-x"></i>
-          </button>
+  <!-- IMAGE PICKER: DESKTOP MODAL vs. MOBILE FULL-SCREEN BOTTOM SHEET -->
+  <div class="image-picker-overlay" id="imagePickerOverlay">
+    <div class="image-picker-box" id="imagePickerBox">
+      
+      <!-- Drag Handle -->
+      <div class="picker-drag-handle-area" id="pickerDragHeader">
+        <div class="picker-drag-handle mobile-only-handle"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <h3>Choose Avatar</h3>
+          <button id="closeImagePickerBtn" type="button" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-main);"><i class="ph ph-x"></i></button>
         </div>
       </div>
 
-      <div class="bottom-sheet-content">
-        <h4 class="sheet-section-title">Main Discovery</h4>
-        <div class="wide-nav-grid">
-          <a href="index.html" class="nav-card-module">
-            <div class="module-icon"><i class="ph-fill ph-house"></i></div>
-            <div class="module-text">
-              <h4>Home Feed</h4>
-              <p>Explore curated UI kits, mockups, and 3D assets</p>
-            </div>
-            <i class="ph ph-arrow-right module-arrow"></i>
-          </a>
-        </div>
+      <!-- TABS ORDER: PRESET FIRST, PASTE LINK SECOND -->
+      <div class="picker-tabs">
+        <button type="button" class="picker-tab-btn active" data-target="tab-gallery">Choose Preset</button>
+        <button type="button" class="picker-tab-btn" data-target="tab-link">Paste Link</button>
+      </div>
 
-        <h4 class="sheet-section-title">Account & Preferences</h4>
-        <div class="clean-list-group">
-          <a href="login.html" class="clean-list-item">
-            <i class="ph ph-sign-in"></i>
-            <span>Sign In to Account</span>
-            <i class="ph ph-caret-right push-arrow"></i>
-          </a>
-          <a href="settings.html" class="clean-list-item">
-            <i class="ph ph-gear"></i>
-            <span>System Settings</span>
-            <i class="ph ph-caret-right push-arrow"></i>
-          </a>
+      <!-- TAB 1: PRESET GALLERY SCROLL -->
+      <div class="picker-tab-content active" id="tab-gallery">
+        <div class="image-grid-scroll" id="presetsGalleryGrid">
+          <!-- Dynamically loaded from pimage.js -->
         </div>
       </div>
+
+      <!-- TAB 2: PASTE IMAGE LINK -->
+      <div class="picker-tab-content" id="tab-link">
+        <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">Enter Google Drive direct link or any Image URL:</label>
+        <input type="text" id="custom-image-url" placeholder="https://images.unsplash.com/..." style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-main); color:var(--text-main); margin-bottom:12px;">
+        <button type="button" id="previewUrlBtn" class="btn-mobile-save" style="width:100%;">Preview Image</button>
+      </div>
+
+      <!-- LIVE PREVIEW AREA -->
+      <div class="preview-box">
+        <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">Live Preview</p>
+        <img id="live-picker-preview" src="images/user.png" alt="Preview">
+      </div>
+
+      <!-- MODAL SAVE BUTTON -->
+      <div class="modal-save-footer">
+        <button type="button" id="confirmImageSelectionBtn" class="btn-modal-save-visible">Set As Avatar</button>
+      </div>
+
+      <div class="mobile-only-hint" style="text-align: center; font-size: 0.75rem; color: var(--text-muted); padding-top: 10px;">
+        <span>Swipe down to close</span>
+      </div>
+
     </div>
   </div>
 
   <script src="script.js"></script>
+  <script type="module" src="log.js"></script>
+
+  <!-- SETTINGS LOGIC INJECTED WITH SCRIPT TAG -->
+  <script type="module">
+    import { db, auth } from './fl.js';
+    import { doc, getDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { presetImages } from './pimage.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('profileSettingsForm');
+      const nameInput = document.getElementById('display-name');
+      const usernameInput = document.getElementById('username-input'); // Username input
+      const bioInput = document.getElementById('slogan');
+      const tagsInput = document.getElementById('tags-input');
+      const emailInput = document.getElementById('email');
+      const websiteInput = document.getElementById('website');
+      const avatarPreview = document.getElementById('settings-avatar-preview');
+      const saveBtn = document.getElementById('saveProfileBtn');
+      const presetsGrid = document.getElementById('presetsGalleryGrid');
+      const livePreviewImg = document.getElementById('live-picker-preview');
+      
+      let currentUser = null;
+      let selectedAvatarUrl = avatarPreview.src;
+      let currentUsername = ""; // Tracker for the existing username
+
+      // SHOW SAVE BUTTON ON INPUT CHANGE
+      function triggerChange() {
+        saveBtn.classList.add('show-changes');
+      }
+
+      [nameInput, usernameInput, bioInput, tagsInput, websiteInput].forEach(input => {
+        input.addEventListener('input', triggerChange);
+      });
+
+      // LOAD PRESETS FROM pimage.js
+      if (presetsGrid && presetImages) {
+        presetsGrid.innerHTML = presetImages.map(url => `
+          <img class="preset-img-item" src="${url}" alt="Preset Avatar">
+        `).join('');
+      }
+
+      // FETCH USER DATA
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          currentUser = user;
+          emailInput.value = user.email;
+
+          try {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+              const data = userDoc.data();
+              nameInput.value = data.name || "";
+              usernameInput.value = data.username || "";
+              currentUsername = data.username || ""; // Save initial username
+              bioInput.value = data.bio || "";
+              websiteInput.value = data.website || "";
+              tagsInput.value = data.tags ? data.tags.join(', ') : "";
+              if (data.photoURL) {
+                avatarPreview.src = data.photoURL;
+                selectedAvatarUrl = data.photoURL;
+                livePreviewImg.src = data.photoURL;
+              }
+            }
+          } catch (e) {
+            console.error("Error fetching settings:", e);
+          }
+        } else {
+          window.location.href = 'login.html';
+        }
+      });
+
+      // IMAGE PICKER LOGIC
+      const openBtn = document.getElementById('openImagePickerBtn');
+      const closeBtn = document.getElementById('closeImagePickerBtn');
+      const overlay = document.getElementById('imagePickerOverlay');
+      const dragHeader = document.getElementById('pickerDragHeader');
+      const tabBtns = document.querySelectorAll('.picker-tab-btn');
+      const tabContents = document.querySelectorAll('.picker-tab-content');
+
+      openBtn.addEventListener('click', () => {
+        overlay.classList.add('active');
+      });
+
+      closeBtn.addEventListener('click', () => {
+        overlay.classList.remove('active');
+      });
+
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.classList.remove('active');
+        }
+      });
+
+      let startY = 0;
+      let isDragging = false;
+
+      dragHeader.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+        isDragging = true;
+      }, { passive: true });
+
+      dragHeader.addEventListener('touchmove', (e) => {
+        if (!isDragging || window.innerWidth > 640) return;
+        const currentY = e.touches[0].clientY;
+        const diff = startY - currentY;
+        if (diff < -50) {
+          overlay.classList.remove('active');
+          isDragging = false;
+        }
+      }, { passive: true });
+
+      dragHeader.addEventListener('touchend', () => {
+        isDragging = false;
+      });
+
+      // TAB SWITCHER
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabBtns.forEach(b => b.classList.remove('active'));
+          tabContents.forEach(c => c.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById(btn.dataset.target).classList.add('active');
+        });
+      });
+
+      // Preview Custom URL
+      document.getElementById('previewUrlBtn').addEventListener('click', () => {
+        let url = document.getElementById('custom-image-url').value.trim();
+        if (url.includes('drive.google.com/file/d/')) {
+          const fileId = url.split('/file/d/')[1].split('/')[0];
+          url = `https://drive.google.com/uc?export=view&id=${fileId}`;
+        }
+        if (url) {
+          livePreviewImg.src = url;
+          selectedAvatarUrl = url;
+        }
+      });
+
+      // Preview Preset Selection
+      presetsGrid.addEventListener('click', (e) => {
+        if (e.target.classList.contains('preset-img-item')) {
+          document.querySelectorAll('.preset-img-item').forEach(i => i.classList.remove('selected'));
+          e.target.classList.add('selected');
+          livePreviewImg.src = e.target.src;
+          selectedAvatarUrl = e.target.src;
+        }
+      });
+
+      // Confirm Selection
+      document.getElementById('confirmImageSelectionBtn').addEventListener('click', () => {
+        avatarPreview.src = selectedAvatarUrl;
+        overlay.classList.remove('active');
+        triggerChange(); 
+      });
+
+      // SAVE TO FIREBASE & VERIFY USERNAME
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!currentUser) return;
+
+        saveBtn.innerText = "Applying & Saving...";
+        saveBtn.disabled = true;
+
+        const newUsername = usernameInput.value.trim();
+
+        try {
+          // Username uniqueness check if it was changed
+          if (newUsername !== currentUsername) {
+            const q = query(collection(db, "users"), where("username", "==", newUsername));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+                alert("This Username is already taken by someone else!");
+                saveBtn.innerText = "Apply & Save Profile";
+                saveBtn.disabled = false;
+                return; // Stop saving process
+            }
+          }
+
+          const tagsArray = tagsInput.value.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+
+          await updateDoc(doc(db, "users", currentUser.uid), {
+            name: nameInput.value,
+            username: newUsername,
+            bio: bioInput.value,
+            tags: tagsArray,
+            website: websiteInput.value,
+            photoURL: selectedAvatarUrl
+          });
+          
+          currentUsername = newUsername; // Update local tracker
+          alert("Profile updated & applied successfully! 🔥");
+          
+          saveBtn.innerText = "Apply & Save Profile";
+          saveBtn.disabled = false;
+          saveBtn.classList.remove('show-changes'); 
+        } catch (error) {
+          alert("Failed to save profile: " + error.message);
+          saveBtn.innerText = "Apply & Save Profile";
+          saveBtn.disabled = false;
+        }
+      });
+    });
+  </script>
 </body>
 </html>

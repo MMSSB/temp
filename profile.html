@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>u.live - Fabian Profile Clone</title>
+  <title>u.live - My Profile</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
@@ -21,7 +21,7 @@
       </a>
 
       <nav class="nav-links">
-        <a href="#" class="active">All posts</a>
+        <a href="index.html">All posts</a>
         <a href="#">Templates</a>
         <a href="#">Components</a>
         <a href="#">Mockups</a>
@@ -42,8 +42,8 @@
         </div>
         -->
 
-        <!-- NEW: NOTIFICATIONS & BOOKMARK ICONS IN NAVBAR -->
-                 <button class="icon-btn search-btn" aria-label="Search">
+        <!-- NOTIFICATIONS & BOOKMARK ICONS IN NAVBAR -->
+        <button class="icon-btn search-btn" aria-label="Search">
           <i class="ph ph-magnifying-glass"></i>
         </button>
 
@@ -61,8 +61,9 @@
           </button>
 
           <!-- =========================================================
-               DESIGN B: WITH USER HEADER, AVATAR & GREEN BADGE (ACTIVE)
+               DESIGN B: WITH USER HEADER, AVATAR & GREEN BADGE (COMMENTED)
           ========================================================== -->
+          <!--
           <div class="profile-dropdown design-b" id="profileDropdown">
             <div class="dropdown-user-header">
               <div class="dropdown-header-info">
@@ -73,49 +74,17 @@
                 <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Sophie">
               </div>
             </div>
-
-            <div class="dropdown-list">
-              <a href="#" class="dropdown-item active-item">
-                <i class="ph-fill ph-check-circle"></i>
-                <span>Profile</span>
-              </a>
-              <a href="#" class="dropdown-item">
-                <i class="ph ph-chat-circle-text"></i>
-                <span>Community</span>
-                <span class="badge-plus">+</span>
-              </a>
-              <a href="#" class="dropdown-item">
-                <i class="ph ph-credit-card"></i>
-                <span>Subscription</span>
-                <span class="badge-pro green">⚡ PRO</span>
-              </a>
-              <a href="#" class="dropdown-item">
-                <i class="ph ph-gear"></i>
-                <span>Settings</span>
-              </a>
-
-              <div class="dropdown-divider"></div>
-
-              <a href="#" class="dropdown-item">
-                <i class="ph ph-info"></i>
-                <span>Help center</span>
-              </a>
-              <a href="login.html" class="dropdown-item">
-                <i class="ph ph-sign-out"></i>
-                <span>Sign out</span>
-              </a>
-            </div>
+            ...
           </div>
+          -->
 
           <!-- =========================================================
-               DESIGN A: CLEAN LIST & PINK BADGE (COMMENTED OUT)
-               To use: Uncomment this block & comment out Design B above.
+               DESIGN A: CLEAN LIST & PINK BADGE (RESTORED & ACTIVE)
           ========================================================== -->
-          <!--
           <div class="profile-dropdown design-a" id="profileDropdown">
             <div class="dropdown-list">
-              <a href="#" class="dropdown-item">
-                <i class="ph ph-user"></i>
+              <a href="profile.html" class="dropdown-item active-item">
+                <i class="ph-fill ph-check-circle"></i>
                 <span>Profile</span>
               </a>
               <a href="#" class="dropdown-item">
@@ -127,7 +96,7 @@
                 <span>Subscription</span>
                 <span class="badge-pro pink">⚡ PRO</span>
               </a>
-              <a href="#" class="dropdown-item">
+              <a href="settings.html" class="dropdown-item">
                 <i class="ph ph-gear"></i>
                 <span>Settings</span>
               </a>
@@ -138,13 +107,12 @@
                 <i class="ph ph-info"></i>
                 <span>Help center</span>
               </a>
-              <a href="login.html" class="dropdown-item">
-                <i class="ph ph-sign-out"></i>
-                <span>Sign out</span>
-              </a>
+<a href="#" class="dropdown-item">
+  <i class="ph ph-sign-out"></i>
+  <span>Sign out</span>
+</a>
             </div>
           </div>
-          -->
 
         </div>
       </div>
@@ -173,57 +141,53 @@
   <!-- Main 1:1 Layout Area -->
   <main class="main-container">
     
-    <!-- Profile Card -->
+    <!-- Profile Card (Dynamic Injection Targets) -->
     <aside class="profile-card animate-fade-up" style="--delay: 0s;">
+      
       <div class="avatar-lg">
-        <img src="images/mms.jpg" alt="mms">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Avatar">
       </div>
       
       <div class="profile-header-text">
-        <h1 class="profile-name">
-          MMS <i class="ph-fill ph-check-circle verified-badge"></i>
-        </h1>
-        <p class="profile-bio">I design web and mobile apps that not only work seamlessly but also drive revenue growth for businesses.</p>
+        <h1 class="profile-name">Loading...</h1>
+        <p class="profile-bio">Loading user data...</p>
       </div>
 
       <div class="tags-section">
         <span class="tags-label">Tags</span>
         <div class="tags-grid">
-          <span class="tag">Dashboard</span>
-          <span class="tag">Mobile App</span>
-          <span class="tag">Web</span>
-          <span class="tag">Dark</span>
-          <span class="tag">Light</span>
-          <span class="tag">UI kits</span>
-          <span class="tag">3D</span>
+          <!-- Tags injected by profile.js -->
         </div>
       </div>
 
       <div class="profile-stats">
         <div class="stat-item">
-          <strong>608</strong> <span>Followers</span>
+          <strong>0</strong> <span>Followers</span>
         </div>
         <div class="stat-item">
-          <strong>100</strong> <span>Post</span>
+          <strong>0</strong> <span>Posts</span>
         </div>
       </div>
 
-      <!-- Full-width Follow button for mobile -->
-      <button class="btn-mobile-follow" type="button">
+      <!-- Desktop & Mobile Edit Profile Button -->
+      <a href="settings.html" class="btn-outline-full" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px;">
+        <i class="ph ph-gear"></i> Edit Profile
+      </a>
+
+      <!-- Full-width Follow button (can be hidden or styled for guests) -->
+      <button class="btn-mobile-follow" type="button" style="display: none;">
         <i class="ph ph-plus"></i> Follow
       </button>
 
       <div class="profile-link">
         <i class="ph ph-link"></i>
-        <a href="#" target="_blank">u.live/fabian</a>
+        <a href="#" target="_blank">Loading...</a>
       </div>
 
       <div class="social-links">
-        <a href="#" aria-label="Twitter"><i class="ri-twitter-x-line"></i></a>
-        <a href="#" aria-label="Dribbble"><i class="ri-dribbble-line"></i></a>
-        <a href="#" aria-label="Behance"><i class="ri-behance-line"></i></a>
-        <a href="#" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+        <!-- Social links injected by profile.js -->
       </div>
+      
     </aside>
 
     <!-- Right Column: Feed Assets -->
@@ -234,97 +198,31 @@
         <button class="tab-btn">Liked</button>
       </div>
 
+      <!-- EMPTY GRID: JavaScript will inject the posts here dynamically -->
       <div class="gallery-grid">
-        
-        <div class="card card-square animate-fade-up" style="--delay: 0.15s;">
-          <div class="card-preview dark-preview">
-            <div class="mock-widget">
-              <div class="widget-header">
-                <span class="dot"></span>
-                <span>607</span>
-              </div>
-              <div class="chart-bars">
-                <span style="height: 40%"></span>
-                <span style="height: 80%"></span>
-                <span style="height: 60%"></span>
-                <span style="height: 90%"></span>
-                <span style="height: 50%"></span>
-                <span style="height: 75%"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card card-square animate-fade-up" style="--delay: 0.2s;">
-          <div class="card-preview light-preview">
-            <img class="asset-img" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=500&q=80" alt="3D Blue Monster">
-          </div>
-        </div>
-
-        <div class="card card-tall animate-fade-up" style="--delay: 0.25s;">
-          <div class="card-preview dark-preview">
-            <div class="mock-mobile-app">
-              <div class="mock-nav"></div>
-              <div class="mock-hero-box">
-                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80" alt="mini character">
-              </div>
-              <div class="mock-list">
-                <div></div><div></div><div></div><div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card card-square animate-fade-up" style="--delay: 0.3s;">
-          <div class="card-preview light-preview">
-            <div class="mock-list-widget">
-              <div class="list-row"><span class="circle"></span><span class="line"></span></div>
-              <div class="list-row"><span class="circle"></span><span class="line"></span></div>
-              <div class="list-row"><span class="circle"></span><span class="line"></span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card card-square animate-fade-up" style="--delay: 0.35s;">
-          <div class="card-preview dark-preview">
-            <div class="mock-finance">
-              <small>Balance</small>
-              <h3>$3,326</h3>
-              <div class="mini-wave"></div>
-              <button class="mock-btn">Send</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card card-small animate-fade-up" style="--delay: 0.4s;">
-          <div class="card-preview dark-preview flex-center">
-            <div class="mock-pill-bar">
-              <span>Today</span>
-              <i class="ph ph-caret-down"></i>
-            </div>
-          </div>
-        </div>
-
+         <div style="grid-column: 1 / -1; padding: 60px 20px; text-align: center; color: var(--text-muted);">
+            <i class="ph ph-spinner ph-spin" style="font-size: 2rem; margin-bottom: 12px;"></i>
+            <p>Loading your profile and posts...</p>
+         </div>
       </div>
+      
     </section>
 
   </main>
 
   <!-- =========================================================
        NEW: FLOATING BOTTOM BAR (5 ICONS PILL) + OUTSIDE FLOATING '+' PILL
-       (5th icon after user opens Modern Draggable Bottom Nav Menu)
   ========================================================== -->
   <div class="mobile-floating-container" id="mobileFloatingContainer">
     <!-- Floating Left/Center Pill: 5 Navigation Icons -->
     <nav class="mobile-nav-pill">
-      <a href="index.html" class="mobile-nav-item active" aria-label="Home"><i class="ph-fill ph-house"></i></a>
+      <a href="index.html" class="mobile-nav-item" aria-label="Home"><i class="ph ph-house"></i></a>
       <a href="#" class="mobile-nav-item" aria-label="Search"><i class="ph ph-magnifying-glass"></i></a>
       <a href="#" class="mobile-nav-item" aria-label="Notifications">
         <i class="ph ph-bell"></i>
         <span class="notif-dot"></span>
       </a>
-      <a href="#" class="mobile-nav-item" aria-label="Profile"><i class="ph ph-user"></i></a>
-      <!-- 5TH ICON: OPEN BOTTOM SHEET NAV MENU -->
+      <a href="profile.html" class="mobile-nav-item active" aria-label="Profile"><i class="ph-fill ph-user"></i></a>
       <button class="mobile-nav-item menu-trigger-btn" id="openBottomSheetBtn" aria-label="Menu" title="Menu">
         <i class="ph ph-squares-four"></i>
       </button>
@@ -337,69 +235,11 @@
   </div>
 
   <!-- =========================================================
-       MODERN DRAGGABLE / EXPANDABLE BOTTOM SHEET NAV MENU
-  ========================================================== -->
-  <!-- <div class="bottom-sheet-overlay" id="bottomSheetOverlay">
-    <div class="bottom-sheet" id="bottomSheet">
-      
-      <div class="bottom-sheet-header" id="bottomSheetHeader">
-        <div class="drag-handle"></div>
-        <div class="sheet-title-row">
-          <h3>Navigation Menu</h3>
-          <button class="close-sheet-btn" id="closeBottomSheetBtn" aria-label="Close Menu">
-            <i class="ph ph-x"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="bottom-sheet-content">
-        <div class="sheet-nav-grid">
-          <a href="index.html" class="sheet-nav-card active">
-            <i class="ph-fill ph-house"></i>
-            <span>Home</span>
-          </a>
-          <a href="profile.html" class="sheet-nav-card">
-            <i class="ph ph-user-circle"></i>
-            <span>Profile (Demo 2)</span>
-          </a>
-          <a href="#" class="sheet-nav-card">
-            <i class="ph ph-compass"></i>
-            <span>Explore</span>
-          </a>
-          <a href="#" class="sheet-nav-card">
-            <i class="ph ph-bookmark-simple"></i>
-            <span>Saved Assets</span>
-          </a>
-          <a href="login.html" class="sheet-nav-card">
-            <i class="ph ph-sign-in"></i>
-            <span>Login</span>
-          </a>
-          <a href="signup.html" class="sheet-nav-card">
-            <i class="ph ph-user-plus"></i>
-            <span>Sign Up</span>
-          </a>
-        </div>
-
-        <div class="pull-to-full-hint">
-          <i class="ph ph-arrows-out-line-vertical"></i>
-          <span>Drag sheet up for full view</span>
-        </div>
-      </div>
-
-    </div>
-  </div> -->
-<!-- =========================================================
        MODERN DRAGGABLE BOTTOM SHEET (MODULAR TOOLKIT UI)
-       HOW TO CUSTOMIZE LAYOUTS:
-       1. For Full-Width Wide Cards  -> use class: "wide-nav-grid"
-       2. For 2-Column Bento Grid    -> use class: "bento-nav-grid"
-       3. For iOS-Style Clean List   -> use class: "clean-list-group"
-       * TIP: You can mix & match these sections inside "bottom-sheet-content"!
   ========================================================== -->
   <div class="bottom-sheet-overlay" id="bottomSheetOverlay">
     <div class="bottom-sheet" id="bottomSheet">
       
-      <!-- Drag Handle Area -->
       <div class="bottom-sheet-header" id="bottomSheetHeader">
         <div class="drag-handle"></div>
         <div class="sheet-title-row">
@@ -410,19 +250,12 @@
         </div>
       </div>
 
-      <!-- Sheet Content Area -->
       <div class="bottom-sheet-content">
         
-        <!-- ======================================================
-             SECTION 1: WIDE CARDS LAYOUT
-             To change this to a 2-column grid, replace class "wide-nav-grid"
-             with "bento-nav-grid" below!
-        ======================================================= -->
         <h4 class="sheet-section-title">Main Discovery (Wide Style)</h4>
         <div class="wide-nav-grid">
-          
-          <a href="index.html" class="nav-card-module active">
-            <div class="module-icon"><i class="ph-fill ph-house"></i></div>
+          <a href="index.html" class="nav-card-module">
+            <div class="module-icon"><i class="ph ph-house"></i></div>
             <div class="module-text">
               <h4>Home Feed</h4>
               <p>Explore curated UI kits, mockups, and 3D assets</p>
@@ -430,27 +263,18 @@
             <i class="ph ph-arrow-right module-arrow"></i>
           </a>
 
-          <a href="profile.html" class="nav-card-module">
-            <div class="module-icon"><i class="ph ph-user-circle"></i></div>
+          <a href="profile.html" class="nav-card-module active">
+            <div class="module-icon"><i class="ph-fill ph-user-circle"></i></div>
             <div class="module-text">
               <h4>Profile (Demo 2)</h4>
               <p>Big hero portrait card with scroll-shrink effect</p>
             </div>
             <i class="ph ph-arrow-right module-arrow"></i>
           </a>
-
         </div>
 
-        <!-- ======================================================
-             SECTION 2: BENTO 2-COLUMN GRID LAYOUT
-             To change this to wide cards, replace "bento-nav-grid"
-             with "wide-nav-grid"!
-             * HINT: Add class "wide-span" to any card inside a bento
-               grid to make it stretch across both columns!
-        ======================================================= -->
         <h4 class="sheet-section-title">Explore & Library (Grid Style)</h4>
         <div class="bento-nav-grid">
-          
           <a href="#" class="nav-card-module">
             <div class="module-icon"><i class="ph ph-compass"></i></div>
             <div class="module-text">
@@ -467,7 +291,6 @@
             </div>
           </a>
 
-          <!-- Example of a Wide-Span Card mixed inside a 2-Column Grid -->
           <a href="#" class="nav-card-module wide-span">
             <div class="module-icon"><i class="ph ph-sparkle"></i></div>
             <div class="module-text">
@@ -476,16 +299,10 @@
             </div>
             <i class="ph ph-arrow-right module-arrow"></i>
           </a>
-
         </div>
 
-        <!-- ======================================================
-             SECTION 3: CLEAN LISTING GROUP (ACCOUNT & SHORTCUTS)
-             Best suited for Settings, Login, Sign Up, and simple actions.
-        ======================================================= -->
         <h4 class="sheet-section-title">Account & Preferences (List Style)</h4>
         <div class="clean-list-group">
-          
           <a href="login.html" class="clean-list-item">
             <i class="ph ph-sign-in"></i>
             <span>Sign In to Account</span>
@@ -504,24 +321,25 @@
             <span class="sheet-pro-badge">⚡ PRO</span>
           </a>
 
-          <a href="#" class="clean-list-item">
+          <a href="settings.html" class="clean-list-item">
             <i class="ph ph-gear"></i>
             <span>System Preferences</span>
             <i class="ph ph-caret-right push-arrow"></i>
           </a>
-
         </div>
 
-        <!-- Pull To Full Instruction Prompt -->
         <div class="pull-to-full-hint">
           <i class="ph ph-arrows-out-line-vertical"></i>
           <span>Drag sheet up for full screen view</span>
         </div>
 
       </div>
-
     </div>
   </div>
+  
   <script src="script.js"></script>
+  <script type="module" src="app.js"></script>
+  <script type="module" src="profile.js"></script>
+  <script type="module" src="log.js"></script>
 </body>
 </html>

@@ -42,12 +42,13 @@
 
         <div class="user-profile-menu" id="userProfileMenu">
           <button class="user-avatar-btn" id="userAvatarBtn" aria-label="User Menu" title="User Menu">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User">
+            <img src="images/user.png" alt="User">
           </button>
 
           <!-- =========================================================
-               DESIGN B: WITH USER HEADER, AVATAR & GREEN BADGE (ACTIVE)
+               DESIGN B: WITH USER HEADER, AVATAR & GREEN BADGE (COMMENTED)
           ========================================================== -->
+          <!--
           <div class="profile-dropdown design-b" id="profileDropdown">
             <div class="dropdown-user-header">
               <div class="dropdown-header-info">
@@ -55,7 +56,7 @@
                 <span>sophie@ui.live</span>
               </div>
               <div class="dropdown-header-avatar">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Sophie">
+                <img src="images/user.png" alt="Sophie">
               </div>
             </div>
 
@@ -91,15 +92,14 @@
               </a>
             </div>
           </div>
+          -->
 
           <!-- =========================================================
-               DESIGN A: CLEAN LIST & PINK BADGE (COMMENTED OUT)
-               To use: Uncomment this block & comment out Design B above.
+               DESIGN A: CLEAN LIST & PINK BADGE (ACTIVE)
           ========================================================== -->
-          <!--
           <div class="profile-dropdown design-a" id="profileDropdown">
             <div class="dropdown-list">
-              <a href="#" class="dropdown-item">
+              <a href="profile.html" class="dropdown-item">
                 <i class="ph ph-user"></i>
                 <span>Profile</span>
               </a>
@@ -112,24 +112,29 @@
                 <span>Subscription</span>
                 <span class="badge-pro pink">⚡ PRO</span>
               </a>
-              <a href="#" class="dropdown-item">
+              <a href="settings.html" class="dropdown-item">
                 <i class="ph ph-gear"></i>
                 <span>Settings</span>
               </a>
 
-              <div class="dropdown-divider"></div>
+              <!-- <div class="dropdown-divider"></div> -->
 
-              <a href="#" class="dropdown-item">
-                <i class="ph ph-info"></i>
-                <span>Help center</span>
-              </a>
-              <a href="login.html" class="dropdown-item">
+<a href="#" class="dropdown-item">
+  <i class="ph ph-info"></i>
+  <span>Help center</span>
+</a>
+<div class="dropdown-divider"></div>
+
+              <!-- <a href="login.html" class="dropdown-item">
                 <i class="ph ph-sign-out"></i>
                 <span>Sign out</span>
-              </a>
+              </a> -->
+              <button class="dropdown-item logout-action-btn" style="width: 100%; text-align: left; background: transparent; border: none; font-family: inherit; cursor: pointer;">
+  <i class="ph ph-sign-out"></i>
+  <span>Sign out</span>
+</button>
             </div>
           </div>
-          -->
 
         </div>
       </div>
@@ -164,14 +169,14 @@
       
       <!-- Mini Profile -->
       <div class="mini-profile-card">
-        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="MMS" class="mini-avatar">
+        <img src="images/user.png" alt="MMS" class="mini-avatar">
         <div class="mini-info">
-          <h4>MMS <i class="ph-fill ph-check-circle verified-badge"></i></h4>
-          <p>@mms_builder</p>
+          <h4>- <i class="ph-fill ph-check-circle verified-badge"></i></h4>
+          <p>@-</p>
         </div>
         <div class="mini-stats">
-          <div><strong>1.2k</strong><span>Followers</span></div>
-          <div><strong>34</strong><span>Posts</span></div>
+          <div><strong>0</strong><span>Followers</span></div>
+          <div><strong>0</strong><span>Posts</span></div>
         </div>
         <a href="profile.html" class="btn-outline-full">View My Profile</a>
       </div>
@@ -214,7 +219,7 @@
 
 
       <!-- MOBILE ONLY: Sponsored Ad -->
-      <div class="mobile-ad-wrapper animate-fade-up">
+      <!-- <div class="mobile-ad-wrapper animate-fade-up">
         <div class="widget-box">
           <div class="widget-header-row">
             <h3 class="widget-title">Sponsored</h3>
@@ -235,7 +240,7 @@
             </div>
           </a>
         </div>
-      </div>
+      </div> -->
 
 
 
@@ -269,66 +274,39 @@
 
       <!-- Feed Filter Tabs -->
       <div class="feed-tabs animate-fade-up" style="--delay: 0.1s;">
-        <button class="tab-btn active">For You</button>
+        <button class="tab-btn active" style="font-size: medium;">For You</button>
         <button class="tab-btn">Following</button>
-        <button class="tab-btn">Design Systems</button>
+        <!-- <button class="tab-btn">Design Systems</button> -->
       </div>
 
-      <!-- Posts Column -->
+      <!-- Posts Column (Target for posts.js) -->
       <div class="feed-column">
         
-        <!-- Post 1 -->
+        <!-- =======================================================
+             NEW: REDDIT / FACEBOOK STYLE POST INPUT WIDGET
+        ======================================================== -->
+        <div class="feed-post-card animate-fade-up" id="feedCreatePostTrigger" data-post-action="page" style="--delay: 0.12s; display: flex; align-items: center; gap: 16px; cursor: text; padding: 20px;">
+          <!-- Using user-avatar-btn ensures log.js updates this image automatically! -->
+          <button class="user-avatar-btn" style="pointer-events: none; width: 44px; height: 44px; flex-shrink: 0;">
+            <img src="images/user.png" alt="User">
+          </button>
+          <div style="flex: 1; background: var(--pill-bg); border: 1px solid var(--border-color); padding: 14px 20px; border-radius: 99px; color: var(--text-muted); font-size: 1rem; cursor: text;">
+            What's on your mind? Share a project...
+          </div>
+          <button class="icon-btn" style="background: var(--pill-bg); color: var(--text-main); border: 1px solid var(--border-color);"><i class="ph ph-paper-plane-tilt"></i></button>
+        </div>
+
+        <!-- Static Posts (Will be replaced by posts.js) -->
         <article class="feed-post-card animate-fade-up" style="--delay: 0.15s;">
           <div class="post-header">
-            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80" alt="Fabian" class="post-avatar">
+            <img src="images/user.png" alt="" class="post-avatar">
             <div class="post-meta">
-              <h4>Fabian <i class="ph-fill ph-check-circle verified-badge"></i></h4>
-              <span>@fabian_design • 2h ago</span>
+              <h4>Loading... <i class="ph-fill ph-check-circle verified-badge"></i></h4>
+              <span>Fetching feed</span>
             </div>
-            <button class="post-options-btn"><i class="ph ph-dots-three"></i></button>
           </div>
           <div class="post-body">
-            <p>Just finished working on this new analytics dashboard concept. Tried to keep the charts clean and readable without relying on heavy external CSS frameworks. Thoughts? 📊🔥</p>
-            <div class="post-media dark-preview">
-              <div class="mock-widget">
-                <div class="widget-header"><span class="dot"></span><span>Analytics Overview</span></div>
-                <div class="chart-bars">
-                  <span style="height: 40%"></span><span style="height: 80%"></span><span style="height: 60%"></span>
-                  <span style="height: 90%"></span><span style="height: 50%"></span><span style="height: 75%"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="post-actions">
-            <button class="action-btn"><i class="ph ph-heart"></i> 342</button>
-            <button class="action-btn"><i class="ph ph-chat-circle"></i> 45</button>
-            <button class="action-btn"><i class="ph ph-share-network"></i> Share</button>
-            <button class="action-btn push-right"><i class="ph ph-bookmark-simple"></i></button>
-          </div>
-        </article>
-
-        <!-- Post 2 -->
-        <article class="feed-post-card animate-fade-up" style="--delay: 0.2s;">
-          <div class="post-header">
-            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="Anna" class="post-avatar">
-            <div class="post-meta">
-              <h4>Anna UI</h4>
-              <span>@anna_creates • 5h ago</span>
-            </div>
-            <button class="btn-follow-sm" style="margin-left: auto; margin-right: 12px;">Follow</button>
-            <button class="post-options-btn"><i class="ph ph-dots-three"></i></button>
-          </div>
-          <div class="post-body">
-            <p>Experimenting with some 3D assets for a new landing page hero section. Loving the vibrant colors! 🎨✨</p>
-            <div class="post-media light-preview">
-              <img class="asset-img" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80" alt="3D Blue Monster">
-            </div>
-          </div>
-          <div class="post-actions">
-            <button class="action-btn active-like"><i class="ph-fill ph-heart"></i> 890</button>
-            <button class="action-btn"><i class="ph ph-chat-circle"></i> 112</button>
-            <button class="action-btn"><i class="ph ph-share-network"></i> Share</button>
-            <button class="action-btn push-right active-bookmark"><i class="ph-fill ph-bookmark-simple"></i></button>
+            <p>Loading projects from the Arena...</p>
           </div>
         </article>
 
@@ -341,7 +319,7 @@
     <aside class="right-sidebar scrollable-sidebar animate-fade-up" style="--delay: 0.2s;">
       
       <!-- Sponsored / Ads Widget -->
-      <div class="widget-box">
+      <!-- <div class="widget-box">
         <div class="widget-header-row">
           <h3 class="widget-title">Sponsored</h3>
           <i class="ph ph-info" title="Why you are seeing this ad"></i>
@@ -360,7 +338,7 @@
             </div>
           </div>
         </a>
-      </div>
+      </div> -->
 
       <!-- Suggested Creators Widget -->
       <div class="widget-box">
@@ -405,11 +383,14 @@
     <nav class="mobile-nav-pill">
       <a href="index.html" class="mobile-nav-item active" aria-label="Home"><i class="ph-fill ph-house"></i></a>
       <a href="#" class="mobile-nav-item" aria-label="Search"><i class="ph ph-magnifying-glass"></i></a>
-      <a href="#" class="mobile-nav-item" aria-label="Notifications"><i class="ph ph-bell"></i></a>
+      <a href="#" class="mobile-nav-item" aria-label="Notifications">
+        <i class="ph ph-bell"></i>
+        <span class="notif-dot"></span>
+      </a>
       <a href="appearance.html" class="mobile-nav-item" aria-label="Profile"><i class="ph ph-user"></i></a>
       <button class="mobile-nav-item menu-trigger-btn" id="openBottomSheetBtn" aria-label="Menu"><i class="ph ph-squares-four"></i></button>
     </nav>
-    <button class="floating-plus-btn" id="floatingPlusBtn" aria-label="Create Post"><i class="ph ph-plus"></i></button>
+    <button class="floating-plus-btn" data-post-action="page"  id="floatingPlusBtn" aria-label="Create Post"><i class="ph ph-plus"></i></button>
   </div>
 
   <!-- MODERN DRAGGABLE BOTTOM SHEET (Abbreviated for brevity) -->
@@ -438,6 +419,27 @@
     </div>
   </div>
 
+
+
+  <div class="create-post-overlay" id="createPostOverlay">
+    <div class="create-post-box" id="createPostBox">
+      <div id="createPostDragHeader" style="cursor: grab; padding-bottom: 8px;">
+        <div class="post-mobile-handle" style="width: 44px; height: 5px; background: var(--border-color); border-radius: 99px; margin: 0 auto 12px;"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h3 style="font-size: 1.2rem; color: var(--text-main);">Create Project Post</h3>
+          <button id="closeCreatePostBtn" type="button" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-main);"><i class="ph ph-x"></i></button>
+        </div>
+      </div>
+      <form id="createPostForm" style="display: flex; flex-direction: column; flex: 1;">
+        <textarea id="postContentInput" class="post-textarea" placeholder="What's on your mind? Share a project, snippet, or a thought..."></textarea>
+        <button type="submit" class="btn-publish" id="publishPostBtn">Publish</button>
+      </form>
+    </div>
+  </div>
+
   <script src="script.js"></script>
+  <script type="module" src="log.js"></script>
+  <script type="module" src="app.js"></script>
+  <script type="module" src="posts.js"></script>
 </body>
 </html>
